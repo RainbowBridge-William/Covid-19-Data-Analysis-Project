@@ -1,4 +1,38 @@
-# INFO 201 Course Project
+# COVID-19
 
-This repo will contain the code and data for a course project 
-for the _Technical Foundations of Informatics_ course at the UW iSchool.
+Group A6
+* Patrick Alexander Abboud
+* Jeffrey Kaufman
+* Kyler Smith
+* William Wang
+
+## About the Problem Domain
+
+COVID-19, which is short for coronavirus disease of 2019, is the illness caused by the SARS-CoV-2 virus first identified in Wuhan, China in December of 2019. Since then, the virus has rapidly spread across the world, leading the World Health Organization to declare a global pandemic. Millions of Americans have been infected by the virus, and hundreds of thousands have died due to the disease with those numbers only continuing to grow each day. A global race to develop a vaccine in record-breaking time ensued, with over 100 different candidates being tested across the globe. Despite multiple vaccines receiving emergency authorizations from multiple different nations, the situation is worsening daily as new mutant strains are being identified such as those identified in the United Kingdom. In the United States, public health officials are struggling to convince the populous that the vaccines are safe and effective, leading to widespread anti-vaccine protests seeking to slow the vaccination efforts, which only lends itself to give the virus more time to develop a mutation to defeat the current vaccine formulations.
+
+Thus, analyzing data related to COVID-19 is worthwhile since it will help people understand the overall situation and severity of the pandemic and arouse their interest in adopting protective measures like mask-wearing, social-distancing, and vaccination. In addition, analyzing this data may expose differences in the ability of different regulations between states to contain the virus, which may prove beneficial in helping state governments are only utilizing restrictions that truly work to contain this pathogen.
+
+### Existing Projects
+
+* [COVID Impact Survey Data Visualizations](https://www.covid-impact.org/data-visualizations): This visualization, completed by those responsible for conducting the the COVID Impact Survey, shows some of the socioeconomic impacts that the pandemic has had on Americans.
+* [UNESCO COVID-19 Impact on Education](https://en.unesco.org/covid19/educationresponse): This analysis, conducted by UNESCO, focuses on exploring the impact COVID-19 has on global education. It shows the estimated number of affected learners and where in the world schools are open, closed, or somewhere in-between.
+
+## Our Questions
+
+* Does the number and types of hospitals affect the death rate in each state, and if so, how?
+    * The answer to this question gives critical insight into whether or not the healthcare system in the United States is adequately prepared to respond to major public health crises or not. Additionally, this can help the federal and state governments determine where more hospitals or more advanced hospitals are needed to adequately protect the citizenry. This question can be answered by the Homeland Infrastructure Foundation-Level Data (HIFLD) Hospitals dataset when combined with the COVID-19 Cases and Deaths by State dataset.
+* How does the vaccination affect the cases and death rate in each state?
+    * This question is of interest to all citizens and even everyone in the world. While it states that COVID-19 vaccines were fully evaluated and have been approved since the vaccine could significantly reduce the probability of contracting the virus, there are still many people refusing to get the vaccine. Answering this question will provide people with solid evidence showing the effectiveness of vaccination and helping state governments inspect the result of their effort in vaccination. Through analyzing the COVID Cases and Death data set, the rate of cases and deaths increasing over time by state can be calculated. Then comparing it with the datasets about Vaccine Distribution by state can show the relationship between the distribution of vaccination of each state and the change of the rate of cases & death.
+* How does self-reported mask-wearing affect the number of cases for each county in the United States?
+    * It has been said that wearing a mask helps stop the spread of COVID-19. This question would answer if that is true, and if so, how much of an impact it can have. The New York Times Mask-Wearing Survey by counties in the US dataset would be used to answer this question. This can then be compared to the COVID Cases and Deaths data set.
+* How effective were the different state COVID-19 stay-at-home orders?
+    * At the beginning of the outbreak of COVID-19 in the United States, many states issued stay-at-home orders instructing residents not to leave their homes unless they had essential business. Some people questioned the ability of these stay-at-home orders to slow the spread of COVID-19. By examining trends in state infection numbers before and after the installation of these orders, we can see how effective these orders were at reducing the spread of the virus. Depending on how effective they were, we can use this data to decide whether another one would be appropriate in areas experiencing large numbers of cases.
+
+## Datasets
+
+* [Homeland Infrastructure Foundation-Level Data Hospitals](https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals): This dataset published by the United States Department of Homeland Security and compiled from sources from the United States Department of Health & Human Services and Centers for Disease Control and Prevention provides a list of all hospitals in the United States and their associated trauma level. It will help in identifying how many hospitals and of what type exist in each state, which is needed to understand if hospital count and type has an effect on death rates from COVID-19.
+* [COVID-19 Vaccinations in the United States](https://covid.cdc.gov/covid-data-tracker/#vaccinations): The data set includes the overall US COVID vaccine distribution and administration. It was collected by each state government and gathered by the Centers for Disease Control and Prevention and these data will support answering the relationship between vaccination and change in the rate of cases & deaths of each state.
+* [United States COVID-19 Cases and Deaths by State over Time](https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36): This data set includes the COVID-19 cases and deaths of each state over time. It was collected by each state and gathered by the Centers for Disease Control and Prevention and it will support answering the relationship between vaccination and change in the rate of cases & deaths of each state.
+* [COVID Impact Survey Results](https://www.covid-impact.org/results): This data set contains responses to various survey questions about COVID-19 for 18 different regions. It was done by NORC at the University of Chicago for the Data Foundation. This dataset has a question about mask-wearing, so it could be used to support answering that question.
+* [New York Times Mask-Wearing Survey Data](https://github.com/nytimes/covid-19-data/tree/master/mask-use): This data set contains estimates of mask-usage from 250,000 survey responses for each county in the US. It was assembled by The New York Times and Dynata. Each participant was asked “How often do you wear a mask in public when you expect to be within six feet of another person?” and given the choices of never, rarely, sometimes, frequently, or always. This will be used to answer the question about mask-wearing affecting the number of cases.
+* [Stay on Top of "Stay At Home" — A List of Statewide Orders](https://www.littler.com/publication-press/publication/stay-top-stay-home-list-statewide): This data set gives the date of each state’s stay-at-home order the first time it happened. This can help answer the question regarding the effectiveness of stay-at-home orders.
