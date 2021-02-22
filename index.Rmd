@@ -1,0 +1,22 @@
+---
+title: "Analysis Report Regarding Questions of COVID-19"
+author: "William"
+date: "2/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+source("analysis.R")
+library("knitr")
+```
+
+## Section 1. Problem Domain Description
+
+## Section 2. Data Description
+ 1. General Dataset Description:
+ 
+ 2. Summary Analysis
+
+## Section 3: Specific Question Analysis
+
