@@ -4,6 +4,7 @@ library("tidyverse")
 library("ggplot2")
 library("maps")
 
+
 # NYT Mask-Wearing Survey data set
 mask_use_by_county_df <- read.csv("data/NYT Mask-Wearing Survey/mask-use-by-county.csv")
 
@@ -42,4 +43,19 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
   coord_map() +
   theme_void() +
   labs(title = "\"Never\" Responses per County")
-  
+
+
+
+# CDC Vaccination by State data set
+vaccination_by_state_df <- read.csv("data/COVID-19 Vaccinations in the US/covid19_vaccinations_in_the_united_states.csv")
+
+# replace "N/A" string to NA value and convert the column into numeric
+vaccination_by_state_df[vaccination_by_state_df=="N/A"] <- NA
+vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.numeric)
+
+# make summary of data set
+vaccination_by_state_summary_df <- vaccination_by_state_df %>%
+  na.omit() %>% 
+  select(-State) %>%
+  summary()
+
