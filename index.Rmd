@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("analysis.R")
+#source("analysis.R")
 library("knitr")
 ```
 
@@ -17,8 +17,41 @@ COVID-19, which is short for coronavirus disease of 2019, is the illness caused 
 Thus, analyzing data related to COVID-19 is worthwhile since it will help people understand the overall situation and severity of the pandemic and arouse their interest in adopting protective measures like mask-wearing, social-distancing, and vaccination. In addition, analyzing this data may expose differences in the ability of different regulations between states to contain the virus, which may prove beneficial in helping state governments are only utilizing restrictions that truly work to contain this pathogen.
 
 ## Section 2. Data Description
+```{r section_2, include = FALSE}
+source("section_2.R")
+```
+
+#### NYT Mask-Wearing Survey
+The [NYT Mask-Wearing Survey data set](https://github.com/nytimes/covid-19-data/tree/master/mask-use) contains estimates of mask-usage from 250,000 survey responses for each county in the US. Each participant was asked "How often do you wear a mask in public when you expect to be within six feet of another person?" and given the choices of never, rarely, sometimes, frequently, or always. The survey was done in 2020 from July 2 to July 14, and was assembled by The New York Times and Dynata.
+
+```{r nyt_mask_wearing_survey_sample}
+kable(head(mask_use_by_county_df))
+```
+
+The `COUNTYFP` column is the FIPS code for the county, and the rest of the columns are estimates for the percent of people in that county who responded with that option. Those values always add up to about one.
 
 ### Subsection 2.2 Summary Analysis
+
+#### NYT Mask-Wearing Survey
+Grouped by counties, an average of `r round(mean(mask_use_by_county_df$ALWAYS) * 100)`% of the responses are "Always," and an average of `r round(mean(mask_use_by_county_df$NEVER) * 100)`% of the responses are "Never." For a single county, the values for each response are supposed to sum to one. In reality, the values are rounded to three decimal places, so the sum for each county ranges from `r min(mask_use_by_county_sum_df$sum)` to `r max(mask_use_by_county_sum_df$sum)`.
+
+```{r mask_use_by_county_summary_df}
+kable(mask_use_by_county_summary_df)
+```
+
+```{r mask_use_violin_plot}
+mask_use_violin_plot
+```
+
+```{r mask_use_always_map}
+mask_use_always_map
+```
+
+```{r mask_use_never_map}
+mask_use_never_map
+```
+
+There doesn't seem to be any significant outliers. This is probably because there were 250,000 survey responses for a survey with only 5 options. Any individual county would have to have a lot of different responses in order to be able to become an outlier. Also, there is less chance for outliers because this data set was grouped into counties, forcing all of the columns for each row to sum to one. There are no NA values, and it seems to have data for almost every county.
 
 ## Section 3: Specific Question Analysis
 
