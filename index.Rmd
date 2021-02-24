@@ -94,6 +94,7 @@ The most significant outlier in the data set is the total vaccination population
 
 <br>
 
-#### 
+#### United States COVID-19 Cases and Deaths by State over Time
+
 ## Section 3: Specific Question Analysis
 
