@@ -51,7 +51,7 @@ vaccination_by_state_df <- read.csv("data/COVID-19 Vaccinations in the US/covid1
 
 # replace "N/A" string to NA value and convert the column into numeric
 vaccination_by_state_df[vaccination_by_state_df=="N/A"] <- NA
-vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.numeric)
+vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.integer)
 
 # make summary of data set
 vaccination_by_state_summary_df <- vaccination_by_state_df %>%
@@ -59,3 +59,54 @@ vaccination_by_state_summary_df <- vaccination_by_state_df %>%
   select(-State) %>%
   summary()
 
+# add a column of ratio of population that are given doses for each state
+vaccination_by_state_df <- vaccination_by_state_df %>% 
+  mutate(Ratio_Doses_Administered = Doses_Administered_per_100k /100000)
+
+# calculate sum/mean/min/max
+sum_vaccination <- sum(vaccination_by_state_df$Total_Doses_Administered)
+mean_vaccination_per_100k <- as.integer(round(mean(vaccination_by_state_df$Doses_Administered_per_100k, na.rm = T)))
+min_vaccination_per_100k <- min(vaccination_by_state_df$Doses_Administered_per_100k, na.rm = T)
+max_vaccination_per_100k <- max(vaccination_by_state_df$Doses_Administered_per_100k, na.rm = T)
+mean_ratio_per_100k <- mean(vaccination_by_state_df$Ratio_Doses_Administered, na.rm = T)
+
+# create map data
+vaccination_map_data_df <- map_data("state")
+vaccination_map_data_df$region <- str_to_title(vaccination_map_data_df$region)
+vaccination_map_data_df[vaccination_map_data_df=="New York"] <- "New York State"
+vaccination_map_data_df <- left_join(vaccination_map_data_df, vaccination_by_state_df, by = c("region" = "State"))
+
+# map for total vaccination
+map_total_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(fill = Total_Doses_Administered)) +
+  geom_polygon(mapping = aes(x = long, y = lat, group = group)) +
+  scale_fill_distiller(name = "Number of\nVaccination population", palette = "YlOrRd", labels = scales::comma_format(),direction = "horizontal") +
+  coord_map() +
+  theme_void() +
+  labs(title = "Total Vaccination Population per State")
+
+# map for vaccination percentage
+map_percent_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(fill = Ratio_Doses_Administered)) +
+  geom_polygon(mapping = aes(x = long, y = lat, group = group)) +
+  scale_fill_distiller(name = "Percentage of\nPopulation\nthat got Vaccine", palette = "YlOrRd", labels = scales::percent,direction = "horizontal") +
+  coord_map() +
+  theme_void() +
+  labs(title = "Percentage of Vaccination Population per State")
+
+# top 5 percent vaccination column graph
+top_5_percent_vaccination_df <- vaccination_map_data_df %>% 
+  select(region,Ratio_Doses_Administered) %>% 
+  distinct() %>% 
+  slice_max(Ratio_Doses_Administered, n = 5)
+
+list_state <- rev(top_5_percent_vaccination_df$region)
+
+top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>% 
+  mutate(region=factor(region, levels = list_state)) %>% 
+  ggplot() +
+  geom_col(mapping = aes(x = region, 
+                         y = Ratio_Doses_Administered),
+           position = position_dodge2(reverse = T)) + 
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title="Top 5 States with Highest Percentage of Vaccination",
+       x ="State", y = "Percentage of Vaccination")

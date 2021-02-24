@@ -69,12 +69,31 @@ mask_use_never_map
 
 There doesn't seem to be any significant outliers. This is probably because there were 250,000 survey responses for a survey with only 5 options. Any individual county would have to have a lot of different responses in order to be able to become an outlier. Also, there is less chance for outliers because this data set was grouped into counties, forcing all of the columns for each row to sum to one. There are no NA values, and it seems to have data for almost every county.
 
-#### CDC COVID-19 Vaccinations in the United States
-Grouped by states, there are an average of `r mean(vaccination_by_state_df$Doses_Administerd_per_100k, na.rm = T)` per 100,000 (`r mean(vaccination_by_state_df$Doses_Administerd_per_100k, na.rm = T) * 100/100000`%) of population in each state got doses given. The number of doses administered per 100,000 ranges from `r min(mask_use_by_county_sum_df$Doses_Administerd_per_100k)` to `r max(mask_use_by_county_sum_df$Doses_Administerd_per_100k)`.
+<br>
 
-```{r vaccination_by_state_summary_df}
+#### **CDC COVID-19 Vaccinations in the United States**
+By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100k` per 100,000 (`r mean_ratio_per_100k * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100k` to `r max_vaccination_per_100k`. 
+
+```{r vaccination_by_state_summary_df_}
 kable(vaccination_by_state_summary_df)
 ```
 
+```{r map_total_vaccination}
+map_total_vaccination
+```
+
+```{r map_percent_vaccination}
+map_percent_vaccination
+```
+
+```{r top_5_percent_vaccination_plot}
+top_5_percent_vaccination_plot
+```
+
+The most significant outlier in the data set is the total vaccination population in California. The possible reason might be overall education level in that states is high and also the population base in CA is large so that there are a great number of people taking the vaccine.
+
+<br>
+
+#### 
 ## Section 3: Specific Question Analysis
 
