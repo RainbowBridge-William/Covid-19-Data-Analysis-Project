@@ -94,6 +94,27 @@ total_deaths_by_date_df <- jhu_deaths_time_series_df %>%
   group_by(date) %>% 
   summarize(total_deaths = sum(total_deaths))
 
+jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>% 
+  left_join(total_deaths_by_date_df, by = "date") %>% 
+  summary()
+
+jhu_cases_recorded <- mean(
+  total_cases_by_date_df %>% 
+    filter(date == max(date)) %>% 
+    pull(total_cases)
+)
+  
+jhu_deaths_recorded <- mean(
+  total_deaths_by_date_df %>% 
+    filter(date == max(date)) %>% 
+    pull(total_deaths)
+)
+
+jhu_date_range <- range(
+  jhu_cases_time_series_df %>% 
+    pull(date)
+)
+
 total_cases_deaths_by_date_df <- total_cases_by_date_df %>% 
   left_join(total_deaths_by_date_df, by = "date") %>% 
   gather(
@@ -135,7 +156,8 @@ standardize_trauma_levels <- function(unstandard_levels) {
   unstandard_levels
 }
 
-hifld_hospitals_df <- read.csv("./data/HIFLD Hospitals/Hospitals.csv", na.strings = c("NOT AVAILABLE")) 
+hifld_hospitals_df <- read.csv("./data/HIFLD Hospitals/Hospitals.csv", na.strings = c("NOT AVAILABLE"))
+hifld_hospitals_df$BEDS <- na_if(hifld_hospitals_df$BEDS, -999)
 hifld_hospitals_sample_df <- hifld_hospitals_df %>%
   select(c(NAME, STATE, TYPE, BEDS, TRAUMA))
 
@@ -144,6 +166,10 @@ covid_related_hospitals_df <- hifld_hospitals_df %>%
     STATUS == "OPEN",
     TYPE %in% c("GENERAL ACUTE CARE", "CRITICAL ACCESS", "LONG TERM CARE", "MILITARY", "CHILDREN", "WOMEN")
   )
+
+hifld_hospitals_summary_df <- covid_related_hospitals_df %>% 
+  select(BEDS) %>% 
+  summary()
 
 covid_related_hospitals_contiguous_df <- covid_related_hospitals_df %>% 
   filter(!STATE %in% c("AK", "AS", "GU", "HI", "MP", "PR", "PW", "VI"))
@@ -189,6 +215,20 @@ trauma_centers_state_distribution_plot <- ggplot(data = united_states_state_map_
   labs(
     title = "Distribution of Trauma Centers by Level in the United States",
     color = "Level"
+  )
+
+trauma_centers_df <- covid_related_hospitals_df %>% 
+  mutate(trauma_level = standardize_trauma_levels(TRAUMA)) %>% 
+  filter(!is.na(trauma_level)) %>% 
+  filter(!is.na(BEDS))
+
+trauma_centers_beds_distribution_plot <- ggplot(data = trauma_centers_df) +
+  geom_boxplot(mapping = aes(x = BEDS, y = trauma_level)) +
+  scale_x_continuous(labels = scales::label_comma()) +
+  labs(
+    title = "Distribution of Beds by Trauma Center Level",
+    x = "Beds",
+    y = "Level"
   )
 
 # NYT Mask-Wearing Survey data set
