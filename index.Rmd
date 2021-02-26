@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-#source("analysis.R")
+source("section_2.R")
 library("knitr")
 ```
 
@@ -17,9 +17,6 @@ COVID-19, which is short for coronavirus disease of 2019, is the illness caused 
 Thus, analyzing data related to COVID-19 is worthwhile since it will help people understand the overall situation and severity of the pandemic and arouse their interest in adopting protective measures like mask-wearing, social-distancing, and vaccination. In addition, analyzing this data may expose differences in the ability of different regulations between states to contain the virus, which may prove beneficial in helping state governments are only utilizing restrictions that truly work to contain this pathogen.
 
 ## Section 2. Data Description
-```{r section_2, include = FALSE}
-source("section_2.R")
-```
 
 #### JHU CSSE COVID-19 Data
 The [COVID-19 Data Repository by the Center for System Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) is compiled from sources such as, but not limited to, the World Health Organization and the United States Centers for Disease Control and Prevention (a list of all data sources is provided in the `README.md` file of the repository) provides case and deaths counts for each state/U.S. territory for each day since the SARS-CoV-2 virus was first detected in Washington state in January of 2020. This data set has been known to provide some of the most up-to-date information possible, which has resulted in many different organizations citing this data as trustworthy and reliable.
@@ -54,7 +51,8 @@ The [NYT Mask-Wearing Survey data set](https://github.com/nytimes/covid-19-data/
 kable(head(mask_use_by_county_df))
 ```
 
-The `COUNTYFP` column is the FIPS code for the county, and the rest of the columns are estimates for the percent of people in that county who responded with that option. Those values always add up to about one.
+- The `COUNTYFP` column is the FIPS code for the county.
+- The rest of the columns are estimates for the percent of people in that county who responded with that option. Those values always add up to about one.
 
 #### CDC COVID-19 Vaccinations in the United States
 The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/covid-data-tracker/#vaccinations) contains number of vaccine doses administered by state. Data on COVID-19 vaccine doses administered in the United States are collected by vaccination providers and reported to CDC through multiple sources, including jurisdictions, pharmacies, and federal entities, which use various reporting methods, including Immunization Information Systems, Vaccine Administration Management System, and direct data submission. 
@@ -135,4 +133,37 @@ The most significant outlier in the data set is the total vaccination population
 
 
 ## Section 3: Specific Question Analysis
+
+### How is self-reported mask-wearing related to the number of cases for each county in the United States?
+
+Given a survey asking "How often do you wear a mask in public when you expect to be within six feet of another person?", with 5 different levels of responses, is there any correlation between counties that have more COVID cases and counties with people who answer in a particular way?
+
+The survey was done in 2020 from July 2 to July 14, so I decided to only consider the number of COVID cases in each county on July 14, 2020. I joined the mask-wearing data set with the JHU CSSE COVID-19 cases data set using the FIPS code for each county. I sorted the counties by their rate of responding that they "Always" wear a mask, and calculated the mean number of cases for the top 50% and bottom 50% of those counties. I then did the same thing for the "Never" response.
+
+I also created a scatterplot with the estimated percent of people who responded that they "Always" wear a mask on the x-axis, and the number of COVID cases for that county on the y-axis. I then created the same plot, but with "Never" responses. I also created versions of those two plots that used a log scale for the y-axis.
+
+```{r mask_wearing_results}
+kable(mask_wearing_results_df, col.names = c("Sorted by \"Always\" (mean number of cases)", "Sorted by \"Never\" (mean number of cases)"))
+```
+
+```{r always_plot}
+always_plot
+```
+
+```{r never_plot}
+never_plot
+```
+
+```{r always_plot_log_scale, warning = FALSE}
+always_plot_log_scale
+```
+
+```{r never_plot_log_scale, warning = FALSE}
+never_plot_log_scale
+```
+
+Counties with more people who report that they wear a mask in public, also have more COVID cases. The top 50% of counties that have the largest percent of "Always" responses have a significantly higher mean number of cases than the bottom 50%. This is also true with a significantly lower mean for the "Never" response. Looking at the scatterplots confirms this correlation.
+
+You would expect that counties with more mask-wearers would have less COVID cases, because masks are supposed to slow the spread of COVID, but counties with more mask-wearers actually had more COVID cases. This is probably because of the split between urban and rural counties. Urban counties have a larger population, which means that they have more COVID cases, so people in those counties want to wear a mask more often. People in more rural counties probably don't wear a mask as often because they don't think they need to, because COVID is less of a problem in those counties.
+
 
