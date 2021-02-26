@@ -113,6 +113,84 @@ total_cases_deaths_by_date_plot <- ggplot(data = total_cases_deaths_by_date_df) 
     color = "Count Totals"
   )
 
+# ***** HIFLD Hospitals Data Set *****
+standardize_trauma_levels <- function(unstandard_levels) {
+  # Removes pediatrics
+  unstandard_levels[grepl("^[^,]+PEDIATRIC", unstandard_levels)] <- NA
+  unstandard_levels[unstandard_levels == "RPTC"] <- NA
+  
+  # Removes non-ACS standard centers
+  unstandard_levels[unstandard_levels == "PARC"] <- NA
+  
+  unstandard_levels[startsWith(unstandard_levels, "LEVEL V")] <- "V"
+  unstandard_levels[startsWith(unstandard_levels, "LEVEL IV")] <- "IV"
+  unstandard_levels[startsWith(unstandard_levels, "LEVEL III")] <- "III"
+  unstandard_levels[startsWith(unstandard_levels, "LEVEL II")] <- "II"
+  unstandard_levels[startsWith(unstandard_levels, "LEVEL I")] <- "I"
+  unstandard_levels[unstandard_levels == "ATH"] <- "III"
+  unstandard_levels[unstandard_levels == "CTH"] <- "IV"
+  unstandard_levels[unstandard_levels == "RTC" | unstandard_levels == "RTH"] <- "II"
+  unstandard_levels[unstandard_levels == "TRF" | unstandard_levels == "TRH"] <- "V"
+    
+  unstandard_levels
+}
+
+hifld_hospitals_df <- read.csv("./data/HIFLD Hospitals/Hospitals.csv", na.strings = c("NOT AVAILABLE")) 
+hifld_hospitals_sample_df <- hifld_hospitals_df %>%
+  select(c(NAME, STATE, TYPE, BEDS, TRAUMA))
+
+covid_related_hospitals_df <- hifld_hospitals_df %>% 
+  filter(
+    STATUS == "OPEN",
+    TYPE %in% c("GENERAL ACUTE CARE", "CRITICAL ACCESS", "LONG TERM CARE", "MILITARY", "CHILDREN", "WOMEN")
+  )
+
+covid_related_hospitals_contiguous_df <- covid_related_hospitals_df %>% 
+  filter(!STATE %in% c("AK", "AS", "GU", "HI", "MP", "PR", "PW", "VI"))
+
+covid_related_hospitals_state_distribution_plot <- ggplot(data = united_states_state_map_data) +
+  geom_polygon(
+    mapping = aes(x = long, y = lat, group = group),
+    color = "black",
+    size = 0.1
+  ) +
+  geom_point(
+    data = covid_related_hospitals_contiguous_df,
+    mapping = aes(x = LONGITUDE, y = LATITUDE),
+    color = "red",
+    alpha = 0.5
+  ) +
+  coord_map() +
+  theme_void() +
+  theme(plot.caption = element_text(hjust = 0.5)) +
+  labs(
+    title = "Distribution of Hospitals in the United States",
+    caption = "Each dot represents an open general acute care, critical access, long term care, military, children's, or women's hospital."
+  )
+
+trauma_centers_contiguous_df <- covid_related_hospitals_contiguous_df %>% 
+  mutate(trauma_level = standardize_trauma_levels(TRAUMA)) %>% 
+  filter(!is.na(trauma_level))
+
+trauma_centers_state_distribution_plot <- ggplot(data = united_states_state_map_data) +
+  geom_polygon(
+    mapping = aes(x = long, y = lat, group = group),
+    color = "black",
+    size = 0.1
+  ) +
+  geom_point(
+    data = trauma_centers_contiguous_df,
+    mapping = aes(x = LONGITUDE, y = LATITUDE, color = trauma_level),
+    alpha = 0.5
+  ) +
+  coord_map() +
+  scale_color_brewer(palette = "Dark2") +
+  theme_void() +
+  labs(
+    title = "Distribution of Trauma Centers by Level in the United States",
+    color = "Level"
+  )
+
 # NYT Mask-Wearing Survey data set
 mask_use_by_county_df <- read.csv("data/NYT Mask-Wearing Survey/mask-use-by-county.csv")
 
