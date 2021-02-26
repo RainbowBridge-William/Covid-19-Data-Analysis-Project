@@ -21,6 +21,32 @@ Thus, analyzing data related to COVID-19 is worthwhile since it will help people
 source("section_2.R")
 ```
 
+#### JHU CSSE COVID-19 Data
+The [COVID-19 Data Repository by the Center for System Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) is compiled from sources such as, but not limited to, the World Health Organization and the United States Centers for Disease Control and Prevention (a list of all data sources is provided in the `README.md` file of the repository) provides case and deaths counts for each state/U.S. territory for each day since the SARS-CoV-2 virus was first detected in Washington state in January of 2020. This data set has been known to provide some of the most up-to-date information possible, which has resulted in many different organizations citing this data as trustworthy and reliable.
+
+```{r jhu_cases_time_series_sample_table}
+kable(head(jhu_cases_time_series_sample_df))
+```
+
+```{r jhu_deaths_time_series_sample_table}
+kable(head(jhu_deaths_time_series_sample_df))
+```
+
+##### Data Set Features
+
+- `UID`
+- `iso2`
+- `iso3`
+- `code3`
+- `FIPS`
+- `Admin2`
+- `Province_State`
+- `Country_Region`
+- `Lat`
+- `Long`
+- `Combined_Key`
+- `Xmm.dd.yy`
+
 #### NYT Mask-Wearing Survey
 The [NYT Mask-Wearing Survey data set](https://github.com/nytimes/covid-19-data/tree/master/mask-use) contains estimates of mask-usage from 250,000 survey responses for each county in the US. Each participant was asked "How often do you wear a mask in public when you expect to be within six feet of another person?" and given the choices of never, rarely, sometimes, frequently, or always. The survey was done in 2020 from July 2 to July 14, and was assembled by The New York Times and Dynata.
 
@@ -47,6 +73,19 @@ kable(head(vaccination_by_state_df))
 
 
 ### Subsection 2.2 Summary Analysis
+
+#### JHU CSSE COVID-19 Data
+```{r total_cases_state_distribution_plot}
+total_cases_state_distribution_plot
+```
+
+```{r total_deaths_state_distribution_plot}
+total_deaths_state_distribution_plot
+```
+
+```{r total_cases_deaths_by_date_plot}
+total_cases_deaths_by_date_plot
+```
 
 #### NYT Mask-Wearing Survey
 Grouped by counties, an average of `r round(mean(mask_use_by_county_df$ALWAYS) * 100)`% of the responses are "Always," and an average of `r round(mean(mask_use_by_county_df$NEVER) * 100)`% of the responses are "Never." For a single county, the values for each response are supposed to sum to one. In reality, the values are rounded to three decimal places, so the sum for each county ranges from `r min(mask_use_by_county_sum_df$sum)` to `r max(mask_use_by_county_sum_df$sum)`.
@@ -94,7 +133,6 @@ The most significant outlier in the data set is the total vaccination population
 
 <br>
 
-#### United States COVID-19 Cases and Deaths by State over Time
 
 ## Section 3: Specific Question Analysis
 

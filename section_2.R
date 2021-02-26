@@ -4,6 +4,114 @@ library("tidyverse")
 library("ggplot2")
 library("maps")
 
+united_states_state_map_data <- map_data("state") %>% 
+  left_join(maps::state.fips, by = c("region" = "polyname"))
+
+# ***** JHU CSSE COVID-19 Data *****
+jhu_cases_time_series_raw_df <- read.csv("./data/JHU CSSE COVID-19/time_series_covid19_confirmed_US.csv")
+jhu_cases_time_series_sample_df <- jhu_cases_time_series_raw_df %>% 
+  select(1:12)
+jhu_cases_time_series_df <- jhu_cases_time_series_raw_df %>% 
+  group_by(Province_State) %>%
+  summarize(across(starts_with("X"), sum)) %>% 
+  gather(
+    key = date,
+    value = total_cases,
+    starts_with("X")
+  ) %>% 
+  mutate(
+    state_territory = tolower(Province_State),
+    date = as.Date(date, format = "X%m.%d.%y")
+  ) %>% 
+  select(-Province_State)
+
+most_recent_total_cases_with_state_map_data_df <- jhu_cases_time_series_df %>% 
+  filter(date == max(date)) %>% 
+  left_join(united_states_state_map_data, by = c("state_territory" = "region"))
+
+total_cases_state_distribution_plot <- ggplot(data = most_recent_total_cases_with_state_map_data_df, mapping = aes(fill = total_cases)) +
+  geom_polygon(
+    mapping = aes(x = long, y = lat, group = group),
+    color = "black",
+    size = 0.1
+  ) +
+  coord_map() +
+  scale_fill_distiller(
+    palette = "YlOrRd",
+    direction = "horizontal",
+    labels = scales::label_comma()  
+  ) +
+  theme_void() +
+  labs(
+    title = "Distribution of COVID-19 Cases by State",
+    fill = "Cases"
+  )
+
+jhu_deaths_time_series_raw_df <- read.csv("./data/JHU CSSE COVID-19/time_series_covid19_deaths_US.csv")
+jhu_deaths_time_series_sample_df <- jhu_deaths_time_series_raw_df %>% 
+  select(1:12)
+jhu_deaths_time_series_df <- jhu_deaths_time_series_raw_df %>%
+  group_by(Province_State) %>%
+  summarize(across(starts_with("X"), sum)) %>% 
+  gather(
+    key = date,
+    value = total_deaths,
+    starts_with("X")
+  ) %>% 
+  mutate(
+    state_territory = tolower(Province_State),
+    date = as.Date(date, format = "X%m.%d.%y")
+  ) %>% 
+  select(-Province_State)
+
+most_recent_total_deaths_with_state_map_data_df <- jhu_deaths_time_series_df %>% 
+  filter(date == max(date)) %>% 
+  left_join(united_states_state_map_data, by = c("state_territory" = "region"))
+
+total_deaths_state_distribution_plot <- ggplot(data = most_recent_total_deaths_with_state_map_data_df, mapping = aes(fill = total_deaths)) +
+  geom_polygon(
+    mapping = aes(x = long, y = lat, group = group),
+    color = "black",
+    size = 0.1
+  ) +
+  coord_map() +
+  scale_fill_distiller(
+    palette = "YlOrRd",
+    direction = "horizontal",
+    labels = scales::label_comma()  
+  ) +
+  theme_void() +
+  labs(
+    title = "Distribution of COVID-19 Deaths by State",
+    fill = "Deaths"
+  )
+
+total_cases_by_date_df <- jhu_cases_time_series_df %>% 
+  group_by(date) %>% 
+  summarize(total_cases = sum(total_cases))
+
+total_deaths_by_date_df <- jhu_deaths_time_series_df %>% 
+  group_by(date) %>% 
+  summarize(total_deaths = sum(total_deaths))
+
+total_cases_deaths_by_date_df <- total_cases_by_date_df %>% 
+  left_join(total_deaths_by_date_df, by = "date") %>% 
+  gather(
+    key = count_type,
+    value = count,
+    -date
+  )
+
+total_cases_deaths_by_date_plot <- ggplot(data = total_cases_deaths_by_date_df) +
+  geom_path(mapping = aes(x = date, y = count, color = count_type), alpha = 0.5, size = 1.5) +
+  scale_color_brewer(palette = "Dark2", labels = c("total_cases" = "Cases", "total_deaths" = "Deaths")) +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(
+    title = "Distribution of COVID-19 Cases & Deaths Over Time",
+    x = "Date",
+    y = "Count",
+    color = "Count Totals"
+  )
 
 # NYT Mask-Wearing Survey data set
 mask_use_by_county_df <- read.csv("data/NYT Mask-Wearing Survey/mask-use-by-county.csv")
