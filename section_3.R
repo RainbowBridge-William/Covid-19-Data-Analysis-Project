@@ -1,8 +1,63 @@
-# Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 source("section_2.R")
+
 population_state_df <- read.csv("./data/US Population/population.csv") %>% 
   select(State, Pop)
-# create new case data frame
+
+# ***** Does the number and types of hospitals affect the death rate in each state, and if so, how? *****
+hospital_type_counts_by_state_df <- covid_related_hospitals_df %>% 
+  mutate(trauma_level = standardize_trauma_levels(TRAUMA)) %>%
+  rename(State = STATE) %>% 
+  group_by(State) %>% 
+  summarize(
+    non_trauma = length(which(is.na(trauma_level))),
+    level_i = length(which(trauma_level == "I")),
+    level_ii = length(which(trauma_level == "II")),
+    level_iii = length(which(trauma_level == "III")),
+    level_iv = length(which(trauma_level == "IV")),
+    level_v = length(which(trauma_level == "V"))
+  )
+
+hospital_counts_by_state_summary_df <- hospital_type_counts_by_state_df %>% 
+  rename(
+    "Level I" = level_i,
+    "Level II" = level_ii,
+    "Level III" = level_iii,
+    "Level IV" = level_iv,
+    "Level V" = level_v,
+    "Non-trauma Hospitals" = non_trauma
+  )
+
+hospital_counts_by_state_df <- hospital_type_counts_by_state_df %>% 
+  gather(
+    key = type,
+    value = count,
+    -State
+  )
+
+death_rate_hospitals_df <- most_recent_total_deaths_with_state_map_data_df %>%
+  left_join(population_state_df %>% mutate(state_territory = tolower(State))) %>% 
+  mutate(death_rate = (total_deaths * 100000) / Pop) %>% 
+  left_join(hospital_counts_by_state_df, by = c("abb" = "State")) %>% 
+  filter(!is.na(type))
+
+healthcare_facility_count_death_rate_plot <- ggplot(data = death_rate_hospitals_df) +
+  geom_point(mapping = aes(x = count, y = death_rate)) +
+  geom_smooth(mapping = aes(x = count, y = death_rate), method = "lm") +
+  facet_wrap(
+    ~type,
+    scales = "free_x",
+    labeller = labeller(
+      type = c("level_i" = "Level I", "level_ii" = "Level II", "level_iii" = "Level III", 
+               "level_iv" = "Level IV", "level_v" = "Level V", "non_trauma" = "Non-trauma Hospitals")
+    )
+  ) +
+  labs(
+    title = "Healthcare Facility Count vs. Deaths per 100,000 from COVID-19",
+    x = "Facility Count",
+    y = "Deaths per 100,000"
+  )
+
+# ***** Does the percent of vaccination population in each state affect the rate of cases? If so, how? *****
 new_case_most_recent_df <- jhu_cases_time_series_df %>% 
   filter(date == max(date) | date == max(date) - 1) %>% 
   group_by(state_territory) %>% 

@@ -189,6 +189,8 @@ The most significant outlier in the data set is the total vaccination population
 
 ## Section 3: Specific Question Analysis
 
+#### Does the number and types of hospitals affect the death rate in each state, and if so, how?
+
 #### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 Rate of cases here is the ratio of new cases and total population for each state on the most recent date. Percent of vaccination population is the percentage of population that has given a vaccine.
 

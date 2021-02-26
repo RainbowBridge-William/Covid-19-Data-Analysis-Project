@@ -6,6 +6,12 @@ library("maps")
 
 united_states_state_map_data <- map_data("state") %>% 
   left_join(maps::state.fips, by = c("region" = "polyname"))
+united_states_state_map_data$abb[united_states_state_map_data$region == "massachusetts"] <- "MA"
+united_states_state_map_data$abb[united_states_state_map_data$region == "michigan"] <- "MI"
+united_states_state_map_data$abb[united_states_state_map_data$region == "north carolina"] <- "NC"
+united_states_state_map_data$abb[united_states_state_map_data$region == "new york"] <- "NY"
+united_states_state_map_data$abb[united_states_state_map_data$region == "virginia"] <- "VA"
+united_states_state_map_data$abb[united_states_state_map_data$region == "washington"] <- "WA"
 
 # ***** JHU CSSE COVID-19 Data *****
 jhu_cases_time_series_raw_df <- read.csv("./data/JHU CSSE COVID-19/time_series_covid19_confirmed_US.csv")
@@ -164,7 +170,7 @@ hifld_hospitals_sample_df <- hifld_hospitals_df %>%
 covid_related_hospitals_df <- hifld_hospitals_df %>% 
   filter(
     STATUS == "OPEN",
-    TYPE %in% c("GENERAL ACUTE CARE", "CRITICAL ACCESS", "LONG TERM CARE", "MILITARY", "CHILDREN", "WOMEN")
+    TYPE %in% c("GENERAL ACUTE CARE", "CRITICAL ACCESS", "LONG TERM CARE", "MILITARY", "WOMEN")
   )
 
 hifld_hospitals_summary_df <- covid_related_hospitals_df %>% 
