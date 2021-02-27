@@ -7,8 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-#source("analysis.R")
-read.csv("data/COVID-19 Vaccinations in the US/covid19_vaccinations_in_the_united_states.csv")
+source("section_2.R")
 library("knitr")
 ```
 
@@ -70,18 +69,19 @@ The [NYT Mask-Wearing Survey data set](https://github.com/nytimes/covid-19-data/
 kable(head(mask_use_by_county_df))
 ```
 
-The `COUNTYFP` column is the FIPS code for the county, and the rest of the columns are estimates for the percent of people in that county who responded with that option. Those values always add up to about one.
+- The `COUNTYFP` column is the FIPS code for the county.
+- The rest of the columns are estimates for the percent of people in that county who responded with that option. Those values always add up to about one.
 
 ---
 
 #### CDC COVID-19 Vaccinations in the United States
-The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/covid-data-tracker/#vaccinations) contains number of vaccine doses administered by state. Data on COVID-19 vaccine doses administered in the United States are collected by vaccination providers and reported to CDC through multiple sources, including jurisdictions, pharmacies, and federal entities, which use various reporting methods, including Immunization Information Systems, Vaccine Administration Management System, and direct data submission. 
+The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/covid-data-tracker/#vaccinations) contains number of vaccine doses administered by state. Data on COVID-19 vaccine doses administered in the United States are collected by vaccination providers and reported to CDC through multiple sources, including jurisdictions, pharmacies, and federal entities, which use various reporting methods, including Immunization Information Systems, Vaccine Administration Management System, and direct data submission.
 
 ```{r vaccination_by_state_sample}
 kable(head(vaccination_by_state_df))
 ```
 
-- `Total doses administered` column is the total number of vaccine doses that have been given to people. 
+- `Total doses administered` column is the total number of vaccine doses that have been given to people.
 
 - `Doses administered per 100k` column is the total number of vaccine doses given for every 100,000 people.
 
@@ -165,7 +165,7 @@ There doesn't seem to be any significant outliers. This is probably because ther
 ---
 
 #### **CDC COVID-19 Vaccinations in the United States**
-By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100k` per 100,000 (`r mean_ratio_per_100k * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100k` to `r max_vaccination_per_100k`. 
+By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100k` per 100,000 (`r mean_ratio_per_100k * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100k` to `r max_vaccination_per_100k`.
 
 ```{r vaccination_by_state_summary_df_}
 kable(vaccination_by_state_summary_df)
@@ -220,10 +220,42 @@ kable(vaccine_vs_rate_case, col.names = c("State", "Most Recent Ratio of Vaccina
 vaccine_vs_rate_case_scatter_plot
 ```
 
-According to both quantitative and graphical result, it shows that there are no strong correlation between Ratio of Vaccination Population and Case Rate in each state at most recent date. 
+According to both quantitative and graphical result, it shows that there are no strong correlation between Ratio of Vaccination Population and Case Rate in each state at most recent date.
 
 This result is unexpected to me. I was originally sure of this correlation. My assumption is as the percentage of vaccination population goes up, the cases rate goes down. The possible reasons for this unexpectency are:
 
 - Lack of data due to the fact that CDC vaccination overtime data By State is not available to public. Only vaccination data for each state at most recent data and overtime data for the entire US is available
 - Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across differenct states, different attitude towards mask, and different population density.
 - The result of vaccination may take a longer time to reflect on the case rate since there are still relatively few people taken the vaccine and the actual implement of vaccine is less than three month.
+
+### How is self-reported mask-wearing related to the number of cases for each county in the United States?
+
+Given a survey asking "How often do you wear a mask in public when you expect to be within six feet of another person?", with 5 different levels of responses, is there any correlation between counties that have more COVID cases and counties with people who answer in a particular way?
+
+The survey was done in 2020 from July 2 to July 14, so I decided to only consider the number of COVID cases in each county on July 14, 2020. I joined the mask-wearing data set with the JHU CSSE COVID-19 cases data set using the FIPS code for each county. I sorted the counties by their rate of responding that they "Always" wear a mask, and calculated the mean number of cases for the top 50% and bottom 50% of those counties. I then did the same thing for the "Never" response.
+
+I also created a scatterplot with the estimated percent of people who responded that they "Always" wear a mask on the x-axis, and the number of COVID cases for that county on the y-axis. I then created the same plot, but with "Never" responses. I also created versions of those two plots that used a log scale for the y-axis.
+
+```{r mask_wearing_results}
+kable(mask_wearing_results_df, col.names = c("Sorted by \"Always\" (mean number of cases)", "Sorted by \"Never\" (mean number of cases)"))
+```
+
+```{r always_plot}
+always_plot
+```
+
+```{r never_plot}
+never_plot
+```
+
+```{r always_plot_log_scale, warning = FALSE}
+always_plot_log_scale
+```
+
+```{r never_plot_log_scale, warning = FALSE}
+never_plot_log_scale
+```
+
+Counties with more people who report that they wear a mask in public, also have more COVID cases. The top 50% of counties that have the largest percent of "Always" responses have a significantly higher mean number of cases than the bottom 50%. This is also true with a significantly lower mean for the "Never" response. Looking at the scatterplots confirms this correlation.
+
+You would expect that counties with more mask-wearers would have less COVID cases, because masks are supposed to slow the spread of COVID, but counties with more mask-wearers actually had more COVID cases. This is probably because of the split between urban and rural counties. Urban counties have a larger population, which means that they have more COVID cases, so people in those counties want to wear a mask more often. People in more rural counties probably don't wear a mask as often because they don't think they need to, because COVID is less of a problem in those counties.
