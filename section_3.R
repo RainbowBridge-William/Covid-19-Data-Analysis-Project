@@ -88,6 +88,7 @@ vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping
                                               aes(x = Ratio_Doses_Administered, 
                                                   y = case_rate_most_recent)) + 
   geom_point(size = 1) +
+  geom_smooth(mapping = aes(x = Ratio_Doses_Administered, y = case_rate_most_recent), method = "lm", formula = y ~ x) +
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
   labs(title = "The Rate of Cases vs Percent of Vaccination population in each state\n   on most recent date", 

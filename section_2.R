@@ -283,7 +283,7 @@ vaccination_by_state_df <- read.csv("data/COVID-19 Vaccinations in the US/covid1
 # replace "N/A" string to NA value and convert the column into numeric
 vaccination_by_state_df[vaccination_by_state_df=="N/A"] <- NA
 vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.integer)
-
+vaccination_by_state_sample_df <- vaccination_by_state_df
 # make summary of data set
 vaccination_by_state_summary_df <- vaccination_by_state_df %>%
   na.omit() %>%
