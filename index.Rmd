@@ -89,6 +89,19 @@ kable(head(vaccination_by_state_df))
 
 ---
 
+####Stay At Home Order Enstatement Dates For Each U.S. State
+The [COVID-19 Stay at Home Order Enstatement Dates data set](https://www.littler.com/publication-press/publication/stay-top-stay-home-list-statewide) contains a list of each state and the date on which the first stay at home order was put into effect. These stay at home orders required all non-essential businesses to close and their employees to work from home in an effort to mitigate Covid-19 infection rates. 
+
+'''{r stay_at_home_order_dates_per_state}
+kable(head(order_dates_per_state_df))
+'''
+
+-'State' column is the state abbreviation for each state where data was available in the U.S.
+
+-'Date' column is the date on which the first stay at home order was put into effect.
+
+---
+
 ### Subsection 2.2 Summary Analysis
 
 #### JHU CSSE COVID-19 Data

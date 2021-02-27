@@ -275,6 +275,9 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
 # CDC Vaccination by State data set
 vaccination_by_state_df <- read.csv("data/COVID-19 Vaccinations in the US/covid19_vaccinations_in_the_united_states.csv")
 
+# Stay at home orders for each state
+order_dates_per_state_df <- read.csv("data/State Stay At Home Orders /state_stay_at_home_order_date.csv")
+
 # replace "N/A" string to NA value and convert the column into numeric
 vaccination_by_state_df[vaccination_by_state_df=="N/A"] <- NA
 vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.integer)
