@@ -78,7 +78,7 @@ kable(head(mask_use_by_county_df))
 The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/covid-data-tracker/#vaccinations) contains number of vaccine doses administered by state. Data on COVID-19 vaccine doses administered in the United States are collected by vaccination providers and reported to CDC through multiple sources, including jurisdictions, pharmacies, and federal entities, which use various reporting methods, including Immunization Information Systems, Vaccine Administration Management System, and direct data submission.
 
 ```{r vaccination_by_state_sample}
-kable(head(vaccination_by_state_df))
+kable(head(vaccination_by_state_sample_df))
 ```
 
 - `Total doses administered` column is the total number of vaccine doses that have been given to people.
@@ -220,12 +220,12 @@ kable(vaccine_vs_rate_case, col.names = c("State", "Most Recent Ratio of Vaccina
 vaccine_vs_rate_case_scatter_plot
 ```
 
-According to both quantitative and graphical result, it shows that there are no strong correlation between Ratio of Vaccination Population and Case Rate in each state at most recent date.
+According to both quantitative and graphical result, it shows that there is a slight correlation between Ratio of Vaccination Population and Case Rate in each state at most recent date.
 
-This result is unexpected to me. I was originally sure of this correlation. My assumption is as the percentage of vaccination population goes up, the cases rate goes down. The possible reasons for this unexpectency are:
+This result is unexpected to me. I was originally sure of this correlation to be strong. My assumption is as the percentage of vaccination population goes up, the cases rate goes down. The possible reasons for this unexpectency are:
 
 - Lack of data due to the fact that CDC vaccination overtime data By State is not available to public. Only vaccination data for each state at most recent data and overtime data for the entire US is available
-- Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across differenct states, different attitude towards mask, and different population density.
+- Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across different states, different attitude towards mask, and different population density.
 - The result of vaccination may take a longer time to reflect on the case rate since there are still relatively few people taken the vaccine and the actual implement of vaccine is less than three month.
 
 ### How is self-reported mask-wearing related to the number of cases for each county in the United States?
