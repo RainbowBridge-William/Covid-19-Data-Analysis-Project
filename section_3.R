@@ -94,3 +94,54 @@ vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping
        x = "Percent of Vaccination Population", y = "COVID Cases Rate")
 
 
+# ***** How is self-reported mask-wearing related to the number of cases for each county in the United States? *****
+cases_july_14_df <- jhu_cases_time_series_raw_df %>%
+  mutate(cases = X7.14.20) %>%
+  select(FIPS, cases)
+
+mask_use_vs_cases_df <- mask_use_by_county_df %>%
+  left_join(cases_july_14_df, by = c("COUNTYFP" = "FIPS"))
+
+mask_wearing_results_df <- data.frame(
+  always = c(
+    mask_use_vs_cases_df %>%
+      top_frac(0.5, ALWAYS) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean),
+    mask_use_vs_cases_df %>%
+      top_frac(0.5, -ALWAYS) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean)
+  ),
+  never = c(
+    mask_use_vs_cases_df %>%
+      top_frac(0.5, NEVER) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean),
+    mask_use_vs_cases_df %>%
+      top_frac(0.5, -NEVER) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean)
+  ),
+  row.names = c(
+    "Top 50%",
+    "Bottom 50%"
+  )
+)
+
+always_plot <- ggplot(data = mask_use_vs_cases_df, mapping = aes(x = ALWAYS, y = cases)) +
+  geom_point(size = 0.8) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(title = "Mask-wearing vs COVID cases on July 14, 2020", x = "Percent of people in a county who say they \"Always\" wear a mask", y = "COVID cases")
+
+always_plot_log_scale <- always_plot + scale_y_log10(labels = scales::label_comma())
+always_plot <- always_plot + scale_y_continuous(labels = scales::label_comma())
+
+never_plot <- ggplot(data = mask_use_vs_cases_df, mapping = aes(x = NEVER, y = cases)) +
+  geom_point(size = 0.8) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(title = "Mask-wearing vs COVID cases on July 14, 2020", x = "Percent of people in a county who say they \"Never\" wear a mask", y = "COVID cases")
+
+never_plot_log_scale <- never_plot + scale_y_log10(labels = scales::label_comma())
+never_plot <- never_plot + scale_y_continuous(labels = scales::label_comma())
+

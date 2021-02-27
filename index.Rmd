@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("section_2.R")
+source("section_3.R") # Section 3 contains `source("section_2.R")`
 library("knitr")
 ```
 
@@ -17,10 +17,6 @@ COVID-19, which is short for coronavirus disease of 2019, is the illness caused 
 Thus, analyzing data related to COVID-19 is worthwhile since it will help people understand the overall situation and severity of the pandemic and arouse their interest in adopting protective measures like mask-wearing, social-distancing, and vaccination. In addition, analyzing this data may expose differences in the ability of different regulations between states to contain the virus, which may prove beneficial in helping state governments are only utilizing restrictions that truly work to contain this pathogen.
 
 ## Section 2. Data Description
-```{r section_2, include = FALSE}
-source("section_2.R")
-source("section_3.R")
-```
 
 #### JHU CSSE COVID-19 Data
 
