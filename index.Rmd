@@ -189,7 +189,7 @@ The most significant outlier in the data set is the total vaccination population
 
 ## Section 3: Specific Question Analysis
 
-### Does the number and types of hospitals affect the death rate of COVID-19, and if so, how?
+#### Does the number and types of hospitals affect the death rate of COVID-19, and if so, how?
 
 In every state, there are many different hospitals of many different sizes with many different capabilities. With this knowledge, the question can be asked, does the number of types of hospitals affect the death rate of COVID-19, and if it does, how? In this question, when referring to the "type" of hospital, it references the trauma center level (potentially) assigned to a hospital based on its capabilities to handle trauma patients as defined by the American College of Surgeons. Trauma centers are assigned a level from I to V, with level I trauma centers having the most advanced capabilities and surgeons and specialists available at any time, whereas level V trauma centers are capable of diagnosing and stabilizing trauma patients long enough for them to survive to a lower level trauma center. Additionally, the death rate of COVID-19 is a cause-specific death rate, meaning it measures the frequency of death in a defined population over a specified interval. In this instance, it is measured in deaths per 100,000 members of the population.
 
@@ -207,7 +207,7 @@ Based on the results of the analysis, it does not appear as though there is a si
 
 One of the most interesting things that this might suggest is the important of wearing a mask and practicing proper social distancing. As seen in the geographic distribution of trauma centers, lower level (levels I and II) trauma centers and non-trauma hospitals tend to be grouped near population hotspots in urban cities such as Los Angeles, Houston, Chicago, and New York, to name a few. This suggests that the death rate is more concerned with the ability of the virus to spread among individuals, which is the case in these large urban areas. This would support what public health officials have been saying the vast majority of the time, which is that it is so very critical for every, but especially those coming into contact with those outside of their household often, to wash their hands, wear a mask, and keep your distance.
 
-### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
+#### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 Rate of cases here is the ratio of new cases and total population for each state on the most recent date. Percent of vaccination population is the percentage of population that has given a vaccine.
 
 To do the data analysis, I first calculate the new cases of each state on most recent date. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
@@ -228,7 +228,7 @@ This result is unexpected to me. I was originally sure of this correlation to be
 - Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across different states, different attitude towards mask, and different population density.
 - The result of vaccination may take a longer time to reflect on the case rate since there are still relatively few people taken the vaccine and the actual implement of vaccine is less than three month.
 
-### How is self-reported mask-wearing related to the number of cases for each county in the United States?
+#### How is self-reported mask-wearing related to the number of cases for each county in the United States?
 
 Given a survey asking "How often do you wear a mask in public when you expect to be within six feet of another person?", with 5 different levels of responses, is there any correlation between counties that have more COVID cases and counties with people who answer in a particular way?
 
