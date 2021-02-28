@@ -89,16 +89,20 @@ kable(head(vaccination_by_state_df))
 
 ---
 
-####Stay At Home Order Enstatement Dates For Each U.S. State
-The [COVID-19 Stay at Home Order Enstatement Dates data set](https://www.littler.com/publication-press/publication/stay-top-stay-home-list-statewide) contains a list of each state and the date on which the first stay at home order was put into effect. These stay at home orders required all non-essential businesses to close and their employees to work from home in an effort to mitigate Covid-19 infection rates. 
+#### Stay At Home Order Effectivenes For Each State
+The [Infection rates before and after stay at home orders went into effect set](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly) contains a list of each state and the date on which the first stay at home order was put into effect. It also has infection rates for days before and after the enstatement of these orders. Infection rates were calculated using daily COVID-19 daily cases collected by Johns Hopkins Center for Health Security. 
 
-'''{r stay_at_home_order_dates_per_state}
-kable(head(order_dates_per_state_df))
-'''
+```{r stay_at_home_order_data_sample_df}
+kable(head(stay_at_home_order_data_sample_df))
+```
 
--'State' column is the state abbreviation for each state where data was available in the U.S.
+- `State` column is the state abbreviation for each state where data was available in the U.S.
 
--'Date' column is the date on which the first stay at home order was put into effect.
+- `Order.date` column is the date on which the first stay at home order was put into effect.
+
+- `Infection.rate.and.confidence.interval.before.order` column is the infection rate and confidence interval for this rate for the day before the order went into effect
+
+- `Infection.rate.and.confidence.interval.after.order` column is the infection rate and confidence interval of this rate for the day after the order went into effect.
 
 ---
 

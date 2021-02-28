@@ -3,6 +3,7 @@ library("dplyr")
 library("tidyverse")
 library("ggplot2")
 library("maps")
+library("stringr")
 
 united_states_state_map_data <- map_data("state") %>% 
   left_join(maps::state.fips, by = c("region" = "polyname"))
@@ -96,7 +97,7 @@ total_deaths_by_date_df <- jhu_deaths_time_series_df %>%
 
 jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>% 
   left_join(total_deaths_by_date_df, by = "date") %>% 
-  summary()
+  summary() 
 
 jhu_cases_recorded <- mean(
   total_cases_by_date_df %>% 
@@ -275,9 +276,6 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
 # CDC Vaccination by State data set
 vaccination_by_state_df <- read.csv("data/COVID-19 Vaccinations in the US/covid19_vaccinations_in_the_united_states.csv")
 
-# Stay at home orders for each state
-order_dates_per_state_df <- read.csv("data/State Stay At Home Orders /state_stay_at_home_order_date.csv")
-
 # replace "N/A" string to NA value and convert the column into numeric
 vaccination_by_state_df[vaccination_by_state_df=="N/A"] <- NA
 vaccination_by_state_df[, c(2:5)] <- sapply(vaccination_by_state_df[, c(2:5)], as.integer)
@@ -339,3 +337,16 @@ top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>%
   scale_y_continuous(labels = scales::percent) +
   labs(title="Top 5 States with Highest Percentage of Vaccination",
        x ="State", y = "Percentage of Vaccination")
+
+# Stay at home orders for each state
+state_stay_at_home_order_raw_data_df <- read.csv("data/State Stay At Home Orders /state_stay_at_home_order_data.csv", stringsAsFactors = FALSE)
+stay_at_home_order_data_sample_df <- state_stay_at_home_order_raw_data_df[1:10, ] %>%
+  select(State, 
+         Order.date, 
+         Infection.rate.and.confidence.interval..before.order.,
+         Infection.rate.and.confidence.interval..after.order.)
+
+
+
+  
+
