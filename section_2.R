@@ -459,10 +459,20 @@ infection_rate_decrease_distribution_df <- state_stay_at_home_order_data_df %>%
   
 infection_rate_distribution_plot <- 
   ggplot(data = infection_rate_decrease_distribution_df) + 
-  geom_violin(mapping = aes(x = value, y = Infection_Rate)) + 
+  geom_boxplot(mapping = aes(x = value, y = Infection_Rate)) + 
   labs(title = "Distribution of Pre and Post Order Infection Rates and Difference", 
        y = "Rate Source", 
        x = "Infection Rate") 
+
+infection.rate.before.order.outliers <- 
+  c(arrange(state_stay_at_home_order_data_df, 
+            infection.rate.before.order))[["infection.rate.before.order"]][1:3]
+infection.rate.before.order.outlier.states <- 
+  c(state_stay_at_home_order_data_df[["State"]][1:3])
+infection.rate.change.outliers <- 
+  c(arrange(state_stay_at_home_order_data_df, infection.rate.change))[["infection.rate.change"]][1]
+infection.rate.change.outlier.states <- 
+  c(arrange(state_stay_at_home_order_data_df, infection.rate.change))[["State"]][1]
            
   
 

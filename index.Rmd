@@ -219,6 +219,8 @@ top_5_infection_rate_decrease_states_plot
 infection_rate_distribution_plot
 ```
 
+When it came to the values of infection rates before and after stay at home orders were imposed in various states, there were a few outliers in the values for infection rates before states imposed stay at home orders as well as the difference between infection rates before and after orders were imposed. This is probably because of the inconsistency between the amount of time between the two values were taken from as well as population density in those states. The outliers for infection rates before orders were imposed occurred in `r infection.rate.before.order.outlier.states[1:3]` and the values were `r infection.rate.before.order.outliers[1:3]`. The outlier for infection rate changes occurred in `r infection.rate.change.outlier.states[1]` and the value was `r infection.rate.change.outliers[1]`.
+
 ---
 
 ## Section 3: Specific Question Analysis
