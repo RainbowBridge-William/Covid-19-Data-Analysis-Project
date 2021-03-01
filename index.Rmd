@@ -89,7 +89,7 @@ kable(head(vaccination_by_state_df))
 
 ---
 
-#### Stay At Home Order Effectivenes For Each State
+#### Stay At Home Order Effectiveness For Each State
 The [Infection rates before and after stay at home orders went into effect set](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly) contains a list of each state and the date on which the first stay at home order was put into effect. It also has infection rates for days before and after the enstatement of these orders. Infection rates were calculated using daily COVID-19 daily cases collected by Johns Hopkins Center for Health Security. 
 
 ```{r stay_at_home_order_data_sample_df}
@@ -199,6 +199,27 @@ top_5_percent_vaccination_plot
 ```
 
 The most significant outlier in the data set is the total vaccination population in California. The possible reason might be overall education level in that states is high and also the population base in CA is large so that there are a great number of people taking the vaccine.
+
+---
+
+#### **Stay At Home Order Effectiveness In Different U.S. States**
+Between {r date_range[1]} and {r date_range[2]} there were {r num_orders)} different states which instituted stay at home orders. The average decrease in COVID-19 infection rates due to stay at home orders was {r average.infection.rate.change} with the maximum decrease being {r max.infection.rate.change} and the minimum being {r min.infection.rate.change}.
+
+```{r state_stay_at_home_order_summary_df}
+kable(state_stay_at_home_order_summary_df)
+```
+
+```{r map_infection_rate_decrease_per_state_plot}
+map_infection_rate_decrease_per_state_plot
+```
+
+```{r top_5_infection_rate_decrease_states_plot}
+top_5_infection_rate_decrease_states_plot
+```
+
+```{r infection_rate_distribution_plot}
+infection_rate_distribution_plot
+```
 
 ---
 
