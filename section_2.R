@@ -101,15 +101,15 @@ total_deaths_by_date_df <- jhu_deaths_time_series_df %>%
   group_by(date) %>%
   summarize(total_deaths = sum(total_deaths))
 
-<<<<<<< HEAD
+
 jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>% 
   left_join(total_deaths_by_date_df, by = "date") %>% 
   summary() 
-=======
+
 jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>%
   left_join(total_deaths_by_date_df, by = "date") %>%
   summary()
->>>>>>> c4feee9365e0938fe9b5d3e49b5edf4bb3156a3b
+
 
 jhu_cases_recorded <- mean(
   total_cases_by_date_df %>%
@@ -372,6 +372,8 @@ state_stay_at_home_order_data_df <- state_stay_at_home_order_data_df %>%
            as.Date(Order.date, format = "%m/%d/%Y")) %>%
   select(State, 
          Order.date, 
+         Number.of.days.before.order,
+         Number.of.days.after.order,
          infection.rate.before.order,
          infection.rate.after.order,
          infection.rate.change) 

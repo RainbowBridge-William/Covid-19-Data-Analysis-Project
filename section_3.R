@@ -146,3 +146,26 @@ never_plot <- ggplot(data = mask_use_vs_cases_df, mapping = aes(x = NEVER, y = c
 never_plot_log_scale <- never_plot + scale_y_log10(labels = scales::label_comma())
 never_plot <- never_plot + scale_y_continuous(labels = scales::label_comma())
 
+# *** Do state stay at home orders really work?
+
+time_vs_infection_rate_change_df <- state_stay_at_home_order_data_df %>%
+  mutate(ratio.between.days.after.and.before.order = 
+           (Number.of.days.after.order / Number.of.days.before.order),
+         average.daily.infection.rate.decrease = 
+           (infection.rate.change) / (Number.of.days.after.order + Number.of.days.before.order)) %>%
+  arrange(ratio.between.days.after.and.before.order)  %>%
+  filter(ratio.between.days.after.and.before.order < 3) %>%
+  select(State, Order.date, ratio.between.days.after.and.before.order, average.daily.infection.rate.decrease)
+
+
+time_vs_infection_rate_change_plot <- ggplot(data = time_vs_infection_rate_change_df) +
+  geom_point(mapping = aes(x = ratio.between.days.after.and.before.order, 
+                           y = average.daily.infection.rate.decrease)) + 
+  geom_smooth(mapping = aes(x = ratio.between.days.after.and.before.order, 
+                            y = average.daily.infection.rate.decrease),
+                            method = 'lm' ,
+                            formula = 'y ~ x') + 
+  labs(title = "Relationship Between Stay At Home Order Duration and Decrease In Infection Rate", 
+       x = "Ratio of Time In vs. Out of Lockdown Between Infection Rate Measurements \n(Per State)", 
+       y = "State Average Daily Infection Rate Decrease") + 
+  scale_x_continuous(labels = scales::label_number())
