@@ -5,7 +5,123 @@ library("ggplot2")
 library("maps")
 library("stringr")
 library("shiny")
+library("shinythemes")
+
+source("section_2.R")
+
+domain_description <-
+  "COVID-19, which is short for coronavirus disease
+   of 2019, is the illness caused by the SARS-CoV-2
+   virus first identified in Wuhan, China in December
+   of 2019. Since then, the virus has rapidly spread
+   across the world, leading the World Health Organization
+   to declare a global pandemic. Millions of Americans
+   have been infected by the virus, and hundreds of
+   thousands have died due to the disease with those
+   numbers only continuing to grow each day. A global
+   race to develop a vaccine in record-breaking time
+   ensued, with over 100 different candidates being
+   tested across the globe. Despite multiple vaccines
+   receiving emergency authorizations from multiple
+   different nations, the situation is worsening daily
+   as new mutant strains are being identified such as
+   those identified in the United Kingdom. In the United
+   States, public health officials are struggling to convince
+   the populous that the vaccines are safe and effective,
+   leading to widespread anti-vaccine protests seeking to
+   slow the vaccination efforts, which only lends itself to
+   give the virus more time to develop a mutation to defeat
+   the current vaccine formulations."
+
+domain_description_p2 <-
+  "Thus, analyzing data related to COVID-19 is worthwhile
+  since it will help people understand the overall situation
+  and severity of the pandemic and arouse their interest in
+  adopting protective measures like mask-wearing, social-distancing,
+  and vaccination. In addition, analyzing this data may expose
+  differences in the ability of different regulations between
+  states to contain the virus, which may prove beneficial in
+  helping state governments are only utilizing restrictions
+  that truly work to contain this pathogen."
+
+hospital_data_description <-
+  "This dataset published by the United States Department of Homeland
+  Security and compiled from sources from the United States Department
+  of Health & Human Services and Centers for Disease Control and Prevention
+  provides a list of all hospitals in the United States and their associated
+  trauma level. It will help in identifying how many hospitals and of
+  what type exist in each state, whichis needed to understand if hospital
+  count and type has an effect on death ratesfrom COVID-19."
+
+vaccination_data_description <-
+  "The data set includes the overall US COVID vaccine distribution and
+   administration. It was collected by each state government and gathered
+   by the Centers for Disease Control and Prevention and these data will
+   support answering the relationship between vaccination and change in the
+   rate of cases & deaths of each state."
+
+cases_and_deaths_data_description <-
+  "This data set includes the COVID-19 cases and deaths of each state over
+   time. It was collected by each state and gathered by the Centers for Disease
+   Control and Prevention and it will support answering the relationship between
+   vaccination and change in the rate of cases & deaths of each state."
+
+mask_survey_data_description <-
+  "This data set contains estimates of mask-usage from 250,000 survey responses
+   for each county in the US. It was assembled by The New York Times and Dynata.
+   Each participant was asked “How often do you wear a mask in public when you
+   expect to be within six feet of another person?” and given the choices of never,
+   rarely, sometimes, frequently, or always. This will be used to answer the question
+   about mask-wearing affecting the number of cases."
+
+stay_at_home_order_data_description <-
+  "This data set gives information on each U.S. state's first stay at home home order
+   at the beginning of the COVID-19 pandemic. Data includes the date each state's order
+   went into effect, and the infection rates on dates before and after the order. This
+   data will be used to answer the question regarding the effectiveness of stay at home
+   orders in slowing the spread of COVID-19 in the U.S."
+
+introduction_panel <- tabPanel(("Background"),
+                               h3(strong("Problem Domain")),
+                               tags$hr(),
+                               p(domain_description),
+                               p(domain_description_p2),
+                               h3(strong("Datasets")),
+                               tags$hr(style = "color:white"),
+                               a("- Homeland Infrastructure Foundation-Level Data Hospitals:",
+                                 href = "https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals"),
+                               p(hospital_data_description),
+                               a("- Covid-19 Vaccinations in the United States:",
+                                 href = "https://covid.cdc.gov/covid-data-tracker/#vaccinations"),
+                               p(vaccination_data_description),
+                               a("- U.S. Covid-19 Cases and Deaths By State Over Time:",
+                                 href = "https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36"),
+                               p(cases_and_deaths_data_description),
+                               a("- New York Times Mask Wearing Survey:",
+                                 href = "https://www.covid-impact.org/results"),
+                               p(mask_survey_data_description),
+                               a("- Stay At Home Order Date and Infection Rate Data:",
+                                 href = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly"),
+                               p(stay_at_home_order_data_description)
+                               )
+
+hospital_data_panel <- tabPanel("Hospital Data")
+
+vaccination_data_panel <- tabPanel("Vaccination Data")
+
+mask_data_panel <- tabPanel("Mask Use Data")
+
+stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data")
 
 app_UI <- fluidPage(
-  titlePanel("Covid-19 Data")
+  theme = shinytheme("slate"),
+  titlePanel(h1("Covid-19 Data")),
+  navbarPage(
+    title = strong("Menu"),
+    introduction_panel,
+    hospital_data_panel,
+    vaccination_data_panel,
+    mask_data_panel,
+    stay_at_home_order_data_panel
+  )
 )
