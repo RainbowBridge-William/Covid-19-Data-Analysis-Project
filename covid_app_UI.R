@@ -69,8 +69,8 @@ cases_and_deaths_data_description <-
 mask_survey_data_description <-
   "This data set contains estimates of mask-usage from 250,000 survey responses
    for each county in the US. It was assembled by The New York Times and Dynata.
-   Each participant was asked “How often do you wear a mask in public when you
-   expect to be within six feet of another person?” and given the choices of never,
+   Each participant was asked \"How often do you wear a mask in public when you
+   expect to be within six feet of another person?\" and given the choices of never,
    rarely, sometimes, frequently, or always. This will be used to answer the question
    about mask-wearing affecting the number of cases."
 
@@ -98,7 +98,7 @@ introduction_panel <- tabPanel(("Background"),
                                  href = "https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36"),
                                p(cases_and_deaths_data_description),
                                a("- New York Times Mask Wearing Survey:",
-                                 href = "https://www.covid-impact.org/results"),
+                                 href = "https://github.com/nytimes/covid-19-data/tree/master/mask-use"),
                                p(mask_survey_data_description),
                                a("- Stay At Home Order Date and Infection Rate Data:",
                                  href = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly"),
