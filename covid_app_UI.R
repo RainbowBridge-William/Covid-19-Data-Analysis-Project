@@ -111,17 +111,54 @@ vaccination_data_panel <- tabPanel("Vaccination Data")
 
 mask_data_panel <- tabPanel("Mask Use Data")
 
-stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data")
+year_slider_control <- sliderInput(inputId = "days_after_order",
+                                   label = h5("Days After Order: "),
+                                   value = 30, 
+                                   min = 1, 
+                                   max = 90)
 
-app_UI <- fluidPage(
-  theme = shinytheme("slate"),
-  titlePanel(h1("Covid-19 Data")),
-  navbarPage(
-    title = strong("Menu"),
-    introduction_panel,
-    hospital_data_panel,
-    vaccination_data_panel,
-    mask_data_panel,
-    stay_at_home_order_data_panel
-  )
-)
+button_filter_control <- radioButtons(inputId = "filter", 
+                                      label = "Filter",
+                                      choices = c("Decrease In Cases After Order",
+                                                  "Daily Cases After Order")
+                                      )
+
+menu_control <- selectizeInput(inputId = "state", 
+                            label = h5("State:"),
+                            list(choices = append("Country Average", 
+                                                  state_stay_at_home_order_data_df$State, 
+                                                  0)
+                                 ),
+                            options = list(
+                              highlight = FALSE,
+                              maxOptions = 3,
+                              placeholder = "Search for state and/or country average"),
+                            selected = "Country Average",
+                            multiple = TRUE
+                            )
+
+home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
+                                          year_slider_control,
+                                          button_filter_control,
+                                          menu_control
+                                          )
+
+home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"
+                                          ))
+
+stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data",
+                                          sidebarLayout(
+                                            home_order_controls_panel,
+                                            home_order_analysis_panel
+                                            )
+                                          )
+
+app_UI <- fluidPage(theme = shinytheme("slate"), 
+                    titlePanel(h1("Covid-19 Data")), 
+                    navbarPage(title = strong("Menu"), 
+                               introduction_panel, 
+                               hospital_data_panel, 
+                               vaccination_data_panel, 
+                               mask_data_panel, 
+                               stay_at_home_order_data_panel)
+                    )
