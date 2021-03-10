@@ -369,7 +369,7 @@ state_stay_at_home_order_data_df <- state_stay_at_home_order_data_df %>%
          infection.rate.change = 
            infection.rate.before.order - infection.rate.after.order,
          Order.date = 
-           as.Date(Order.date, format = "%m/%d/%Y")) %>%
+           as.Date(Order.date, format = "%m/%d/%y")) %>%
   select(State, 
          Order.date, 
          Number.of.days.before.order,
