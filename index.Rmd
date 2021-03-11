@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("section_3.R") # Section 3 contains `source("section_2.R")`
+source("section_2.R") # Section 3 contains `source("section_2.R")`
 library("knitr")
 ```
 
@@ -77,13 +77,12 @@ The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/
 kable(head(vaccination_by_state_sample_df))
 ```
 
-- `Total doses administered` column is the total number of vaccine doses that have been given to people.
+- `total_vaccinations` column is the total number of vaccine doses that have been given to people.
 
-- `Doses administered per 100k` column is the total number of vaccine doses given for every 100,000 people.
+- `people_vaccinated` column is the  total number of people who received at least one vaccine dose.
 
-- `18+ Doses Administered` column is the total number of vaccine doses that have been given to people for the overall population
+- `people_vaccinated_per_hundred` column is the total number of people who received at least one vaccine dose per 100 people.
 
-- `18+ Doses administered per 100k` column is the total number of vaccine doses given for every 100,000 people aged 18 years and older.
 
 ---
 
@@ -178,7 +177,7 @@ There doesn't seem to be any significant outliers. This is probably because ther
 ---
 
 #### **CDC COVID-19 Vaccinations in the United States**
-By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100k` per 100,000 (`r mean_ratio_per_100k * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100k` to `r max_vaccination_per_100k`.
+By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100` per 100,000 (`r mean_ratio_per_100 * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100` to `r max_vaccination_per_100`.
 
 ```{r vaccination_by_state_summary_df_}
 kable(vaccination_by_state_summary_df)

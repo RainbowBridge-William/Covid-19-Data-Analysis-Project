@@ -287,7 +287,8 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
 # ***** CDC Vaccination by State data set *****
 vaccination_by_state_raw_df <- read.csv("data/COVID-19 Vaccinations in the US/us_state_vaccinations.csv") %>% 
   rename("state" = "location")
-vaccination_by_state_sample_df <- vaccination_by_state_df
+vaccination_by_state_sample_df <- vaccination_by_state_df %>% 
+  select(date, state, total_vaccinations, people_vaccinated, people_vaccinated_per_hundred)
 
 # make summary of data set
 vaccination_by_state_summary_df <- vaccination_by_state_raw_df %>%
@@ -304,7 +305,7 @@ vaccination_by_state_most_recent_df <- vaccination_by_state_df %>%
   filter(date == max(date))
   
 # calculate sum/mean/min/max
-sum_vaccination <- sum(vaccination_by_state_most_recent_df$total_vaccinations)
+sum_vaccination <- sum(vaccination_by_state_most_recent_df$people_vaccinated)
 mean_vaccination_per_100 <- round(mean(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T))
 min_vaccination_per_100 <- min(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
 max_vaccination_per_100 <- max(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
