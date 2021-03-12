@@ -1,13 +1,13 @@
 source("section_2.R")
 
-population_state_df <- read.csv("./data/US Population/population.csv") %>% 
+population_state_df <- read.csv("./data/US Population/population.csv") %>%
   select(State, Pop)
 
 # ***** Does the number and types of hospitals affect the death rate in each state, and if so, how? *****
-hospital_type_counts_by_state_df <- covid_related_hospitals_df %>% 
+hospital_type_counts_by_state_df <- covid_related_hospitals_df %>%
   mutate(trauma_level = standardize_trauma_levels(TRAUMA)) %>%
-  rename(State = STATE) %>% 
-  group_by(State) %>% 
+  rename(State = STATE) %>%
+  group_by(State) %>%
   summarize(
     non_trauma = length(which(is.na(trauma_level))),
     level_i = length(which(trauma_level == "I")),
@@ -17,7 +17,7 @@ hospital_type_counts_by_state_df <- covid_related_hospitals_df %>%
     level_v = length(which(trauma_level == "V"))
   )
 
-hospital_counts_by_state_summary_df <- hospital_type_counts_by_state_df %>% 
+hospital_counts_by_state_summary_df <- hospital_type_counts_by_state_df %>%
   rename(
     "Level I" = level_i,
     "Level II" = level_ii,
@@ -27,17 +27,19 @@ hospital_counts_by_state_summary_df <- hospital_type_counts_by_state_df %>%
     "Non-trauma Hospitals" = non_trauma
   )
 
-hospital_counts_by_state_df <- hospital_type_counts_by_state_df %>% 
+hospital_counts_by_state_df <- hospital_type_counts_by_state_df %>%
   gather(
     key = type,
     value = count,
     -State
-  ) 
+  )
 
 death_rate_hospitals_df <- most_recent_total_deaths_with_state_map_data_df %>%
-  left_join(population_state_df %>% mutate(state_territory = tolower(State))) %>% 
-  mutate(death_rate = (total_deaths * 100000) / Pop) %>% 
-  left_join(hospital_counts_by_state_df, by = c("abb" = "State")) %>% 
+  select(-c(lat, long, order)) %>%
+  unique() %>%
+  left_join(population_state_df %>% mutate(state_territory = tolower(State))) %>%
+  mutate(death_rate = (total_deaths * 100000) / Pop) %>%
+  left_join(hospital_counts_by_state_df, by = c("abb" = "State")) %>%
   filter(!is.na(type))
 
 healthcare_facility_count_death_rate_plot <- ggplot(data = death_rate_hospitals_df) +
@@ -47,7 +49,7 @@ healthcare_facility_count_death_rate_plot <- ggplot(data = death_rate_hospitals_
     ~type,
     scales = "free_x",
     labeller = labeller(
-      type = c("level_i" = "Level I", "level_ii" = "Level II", "level_iii" = "Level III", 
+      type = c("level_i" = "Level I", "level_ii" = "Level II", "level_iii" = "Level III",
                "level_iv" = "Level IV", "level_v" = "Level V", "non_trauma" = "Non-trauma Hospitals")
     )
   ) +
@@ -58,45 +60,45 @@ healthcare_facility_count_death_rate_plot <- ggplot(data = death_rate_hospitals_
   )
 
 # ***** Does the percent of vaccination population in each state affect the rate of cases? If so, how? *****
-new_case_df <- jhu_cases_time_series_df %>% 
-  group_by(Province_State) %>% 
-  mutate(new_case = total_cases - lag(total_cases)) %>% 
-  rename("State" = "Province_State") %>% 
+new_case_df <- jhu_cases_time_series_df %>%
+  group_by(Province_State) %>%
+  mutate(new_case = total_cases - lag(total_cases)) %>%
+  rename("State" = "Province_State") %>%
   select(State, date, new_case)
 
 # join population df and summarize case rate
-rate_case_df <- new_case_df %>% 
-  left_join(population_state_df) %>% 
-  mutate(case_rate = (new_case * 100000)/ Pop) %>% 
+rate_case_df <- new_case_df %>%
+  left_join(population_state_df) %>%
+  mutate(case_rate = (new_case * 100000)/ Pop) %>%
   select(State, date, case_rate)
 
 rate_case_df$date <- as.character.Date(rate_case_df$date)
 
-# wrangling percent of vaccination 
-percent_vaccination_df <- vaccination_map_data_df %>% 
-  select(date, region,ratio_people_vaccinated) %>% 
-  distinct() %>% 
+# wrangling percent of vaccination
+percent_vaccination_df <- vaccination_map_data_df %>%
+  select(date, region,ratio_people_vaccinated) %>%
+  distinct() %>%
   na.omit()
 
 ## sort by ratio of doses administered
-percent_vaccination_df <- percent_vaccination_df[order(-percent_vaccination_df$ratio_people_vaccinated),] %>% 
+percent_vaccination_df <- percent_vaccination_df[order(-percent_vaccination_df$ratio_people_vaccinated),] %>%
   rename(State = region)
 percent_vaccination_df[percent_vaccination_df=="New York State"] <- "New York"
 
-vaccine_vs_rate_case <- left_join(percent_vaccination_df, rate_case_df, by = c("date", "State")) %>% 
+vaccine_vs_rate_case <- left_join(percent_vaccination_df, rate_case_df, by = c("date", "State")) %>%
   na.omit()
 
 
 
 # plot the graph
-vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping = 
-                                              aes(x = ratio_people_vaccinated, 
-                                                  y = case_rate)) + 
+vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping =
+                                              aes(x = ratio_people_vaccinated,
+                                                  y = case_rate)) +
   geom_point(size = 1) +
   geom_smooth(mapping = aes(x = ratio_people_vaccinated, y = case_rate), method = "lm", formula = y ~ x) +
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous() +
-  labs(title = "The Daily Rate of Cases per 100k vs Percent of Vaccination Population\n in each state Over Time", 
+  labs(title = "The Daily Rate of Cases per 100k vs Percent of Vaccination Population\n in each state Over Time",
        x = "Percent of Vaccination Population", y = "Daily Cases Rate per 100k Population")
 
 
@@ -154,9 +156,9 @@ never_plot <- never_plot + scale_y_continuous(labels = scales::label_comma())
 # *** Do state stay at home orders really work?
 
 time_vs_infection_rate_change_df <- state_stay_at_home_order_data_df %>%
-  mutate(ratio.between.days.after.and.before.order = 
+  mutate(ratio.between.days.after.and.before.order =
            (Number.of.days.after.order / Number.of.days.before.order),
-         average.daily.infection.rate.decrease = 
+         average.daily.infection.rate.decrease =
            (infection.rate.change) / (Number.of.days.after.order + Number.of.days.before.order)) %>%
   arrange(ratio.between.days.after.and.before.order)  %>%
   filter(ratio.between.days.after.and.before.order < 3) %>%
@@ -164,13 +166,13 @@ time_vs_infection_rate_change_df <- state_stay_at_home_order_data_df %>%
 
 
 time_vs_infection_rate_change_plot <- ggplot(data = time_vs_infection_rate_change_df) +
-  geom_point(mapping = aes(x = ratio.between.days.after.and.before.order, 
-                           y = average.daily.infection.rate.decrease)) + 
-  geom_smooth(mapping = aes(x = ratio.between.days.after.and.before.order, 
+  geom_point(mapping = aes(x = ratio.between.days.after.and.before.order,
+                           y = average.daily.infection.rate.decrease)) +
+  geom_smooth(mapping = aes(x = ratio.between.days.after.and.before.order,
                             y = average.daily.infection.rate.decrease),
                             method = 'lm' ,
-                            formula = 'y ~ x') + 
-  labs(title = "Relationship Between Stay At Home Order Duration and Decrease In Infection Rate", 
-       x = "Ratio of Time In vs. Out of Lockdown Between Infection Rate Measurements \n(Per State)", 
-       y = "State Average Daily Infection Rate Decrease") + 
+                            formula = 'y ~ x') +
+  labs(title = "Relationship Between Stay At Home Order Duration and Decrease In Infection Rate",
+       x = "Ratio of Time In vs. Out of Lockdown Between Infection Rate Measurements \n(Per State)",
+       y = "State Average Daily Infection Rate Decrease") +
   scale_x_continuous(labels = scales::label_number())

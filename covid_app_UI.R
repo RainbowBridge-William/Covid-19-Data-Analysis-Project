@@ -2,10 +2,12 @@ library("knitr")
 library("dplyr")
 library("tidyverse")
 library("ggplot2")
+library("plotly")
 library("maps")
 library("stringr")
 library("shiny")
 library("shinythemes")
+library("usa")
 
 source("section_2.R")
 
@@ -105,7 +107,46 @@ introduction_panel <- tabPanel(("Background"),
                                p(stay_at_home_order_data_description)
                                )
 
-hospital_data_panel <- tabPanel("Hospital Data")
+united_states_possessions <- states %>%
+   merge(territory, all = TRUE)
+
+hospital_data_panel <- tabPanel(
+   "Hospital Data",
+   sidebarLayout(
+
+      sidebarPanel(
+         selectizeInput(
+            "hospitalsTypeSelectize",
+            "Facility Types",
+            c(
+               "Non-trauma" = "non_trauma",
+               "Level I" = "level_i",
+               "Level II" = "level_ii",
+               "Level III" = "level_iii",
+               "Level IV" = "level_iv",
+               "Level V" = "level_v"
+            )
+         ),
+         selectizeInput(
+            "hospitalsStateSelectize",
+            "State/Territory",
+            setNames(united_states_possessions$abb, united_states_possessions$name),
+            multiple = TRUE,
+            options = list(
+               "allowEmptyOption" = TRUE,
+               "showEmptyOptionInDropdown" = TRUE,
+               "emptyOptionLabel" = "All U.S. Possessions",
+               "placeholder" = "All U.S. Possessions"
+            )
+         )
+      ),
+
+      mainPanel(
+         plotlyOutput("hospitalsVisualization")
+      )
+
+   )
+)
 
 vaccination_data_panel <- tabPanel("Vaccination Data")
 
@@ -113,20 +154,20 @@ mask_data_panel <- tabPanel("Mask Use Data")
 
 year_slider_control <- sliderInput(inputId = "days_after_order",
                                    label = h5("Days After Order: "),
-                                   value = 30, 
-                                   min = 1, 
+                                   value = 30,
+                                   min = 1,
                                    max = 90)
 
-button_filter_control <- radioButtons(inputId = "filter", 
+button_filter_control <- radioButtons(inputId = "filter",
                                       label = "Filter",
                                       choices = c("Decrease In Cases After Order",
                                                   "Daily Cases After Order")
                                       )
 
-menu_control <- selectizeInput(inputId = "state", 
+menu_control <- selectizeInput(inputId = "state",
                             label = h5("State:"),
-                            list(choices = append("Country Average", 
-                                                  state_stay_at_home_order_data_df$State, 
+                            list(choices = append("Country Average",
+                                                  state_stay_at_home_order_data_df$State,
                                                   0)
                                  ),
                             options = list(
@@ -153,12 +194,12 @@ stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                             )
                                           )
 
-app_UI <- fluidPage(theme = shinytheme("slate"), 
-                    titlePanel(h1("Covid-19 Data")), 
-                    navbarPage(title = strong("Menu"), 
-                               introduction_panel, 
-                               hospital_data_panel, 
-                               vaccination_data_panel, 
-                               mask_data_panel, 
+app_UI <- fluidPage(theme = shinytheme("slate"),
+                    titlePanel(h1("COVID-19 Data")),
+                    navbarPage(title = strong("Menu"),
+                               introduction_panel,
+                               hospital_data_panel,
+                               vaccination_data_panel,
+                               mask_data_panel,
                                stay_at_home_order_data_panel)
                     )
