@@ -74,7 +74,7 @@ mask_survey_data_description <-
    rarely, sometimes, frequently, or always. This will be used to answer the question
    about mask-wearing affecting the number of cases."
 
-stay_at_home_order_data_description <-
+stay_home_order_data_description <-
   "This data set gives information on each U.S. state's first stay at home home order
    at the beginning of the COVID-19 pandemic. Data includes the date each state's order
    went into effect, and the infection rates on dates before and after the order. This
@@ -82,12 +82,18 @@ stay_at_home_order_data_description <-
    orders in slowing the spread of COVID-19 in the U.S."
 
 introduction_panel <- tabPanel(("Background"),
+                               h3(strong("Group A6")),
+                               hr(),
+                               h4(" - Patrick Abboud"),
+                               h4(" - Jeffrey Kaufman"),
+                               h4(" - Kyler Smith"),
+                               h4(" - William Wang"),
                                h3(strong("Problem Domain")),
-                               tags$hr(),
+                               hr(),
                                p(domain_description),
                                p(domain_description_p2),
                                h3(strong("Datasets")),
-                               tags$hr(style = "color:white"),
+                               hr(),
                                a("- Homeland Infrastructure Foundation-Level Data Hospitals:",
                                  href = "https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals"),
                                p(hospital_data_description),
@@ -102,7 +108,7 @@ introduction_panel <- tabPanel(("Background"),
                                p(mask_survey_data_description),
                                a("- Stay At Home Order Date and Infection Rate Data:",
                                  href = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly"),
-                               p(stay_at_home_order_data_description)
+                               p(stay_home_order_data_description)
                                )
 
 hospital_data_panel <- tabPanel("Hospital Data")
@@ -111,45 +117,55 @@ vaccination_data_panel <- tabPanel("Vaccination Data")
 
 mask_data_panel <- tabPanel("Mask Use Data")
 
-year_slider_control <- sliderInput(inputId = "days_after_order",
-                                   label = h5("Days After Order: "),
-                                   value = 30, 
-                                   min = 1, 
-                                   max = 90)
+stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
+                                              label = h5("Days Since Order: "),
+                                              value = 30, 
+                                              min = 0, 
+                                              max = 90)
 
-button_filter_control <- radioButtons(inputId = "filter", 
-                                      label = "Filter",
-                                      choices = c("Decrease In Cases After Order",
-                                                  "Daily Cases After Order")
-                                      )
+stay_home_order_filter_buttons <- radioButtons(inputId = "filter", 
+                                                  label = h5("Time vs.: "),
+                                                  choices = c("New Daily Cases",
+                                                              "Daily Change In Number of New Cases",
+                                                              "Cumulative Difference Between Initial and Current Daily Change"
+                                                              )
+                                                  )
 
-menu_control <- selectizeInput(inputId = "state", 
-                            label = h5("State:"),
-                            list(choices = append("Country Average", 
-                                                  state_stay_at_home_order_data_df$State, 
-                                                  0)
-                                 ),
-                            options = list(
-                              highlight = FALSE,
-                              maxOptions = 3,
-                              placeholder = "Search for state and/or country average"),
-                            selected = "Country Average",
-                            multiple = TRUE
-                            )
+stay_home_order_state_selector_choice_list <- as.list(append("Country Average", 
+                                                               state_stay_at_home_order_data_df$State, 
+                                                               0
+                                                               )
+                                                      )
 
-home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
-                                          year_slider_control,
-                                          button_filter_control,
-                                          menu_control
+stay_home_order_state_selector <- 
+  selectizeInput(inputId = "state", 
+                 label = h5("State:"),
+                 choices = stay_home_order_state_selector_choice_list,
+                 options = list(
+                   highlight = FALSE,
+                   minItems = 1,
+                   maxItems = 10,
+                   placeholder = NULL),
+                 selected = "Country Average",
+                 multiple = TRUE
+                 )
+
+stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
+                                          stay_home_order_time_slider,
+                                          stay_home_order_filter_buttons,
+                                          stay_home_order_state_selector
                                           )
 
-home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"
-                                          ))
+stay_home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"),
+                                       hr(),
+                                       p(plotOutput("stay_home_order_analysis_visual"))
+                                       #p(textOutput("stay_home_order_analysis_plot_description"))
+                                       )
 
-stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data",
+stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                           sidebarLayout(
-                                            home_order_controls_panel,
-                                            home_order_analysis_panel
+                                            stay_home_order_controls_panel,
+                                            stay_home_order_analysis_panel
                                             )
                                           )
 
@@ -160,5 +176,5 @@ app_UI <- fluidPage(theme = shinytheme("slate"),
                                hospital_data_panel, 
                                vaccination_data_panel, 
                                mask_data_panel, 
-                               stay_at_home_order_data_panel)
+                               stay_home_order_data_panel)
                     )
