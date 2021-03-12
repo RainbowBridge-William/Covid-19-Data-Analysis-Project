@@ -303,7 +303,7 @@ vaccination_by_state_most_recent_df <- vaccination_by_state_df %>%
   filter(date == max(date))
   
 # calculate sum/mean/min/max
-sum_vaccination <- sum(vaccination_by_state_most_recent_df$people_vaccinated)
+sum_vaccination <- sum(vaccination_by_state_most_recent_df$people_vaccinated, na.rm = T)
 mean_vaccination_per_100 <- round(mean(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T))
 min_vaccination_per_100 <- min(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
 max_vaccination_per_100 <- max(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
@@ -354,9 +354,10 @@ top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>%
 
 # Stay at home orders for each state
 state_stay_at_home_order_raw_data_df <- read.csv("data/State Stay At Home Orders/state_stay_at_home_order_data.csv", 
-                                                 stringsAsFactors = FALSE)
+                                                 stringsAsFactors = FALSE)%>% 
+  rename("State"= "ï..State")
 
-state_stay_at_home_order_data_df <- state_stay_at_home_order_raw_data_df
+state_stay_at_home_order_data_df <- state_stay_at_home_order_raw_data_df 
 stay_at_home_order_data_sample_df <- state_stay_at_home_order_raw_data_df[1:10, ] %>%
   select(State, 
          Order.date, 
