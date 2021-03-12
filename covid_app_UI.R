@@ -110,15 +110,14 @@ hospital_data_panel <- tabPanel("Hospital Data")
 #****************** Vaccination Panel********************
 vaccination_controls_panel <- sidebarPanel(
    #select box for selecting states
-   selectInput("vaccine_state_select", label = h4("select which state to visualize data for"), 
+   selectInput("vaccine_state_select", label = h4("select which state to visualize data for:"), 
                choices = list("Over All (Entire US)" = "the Entire US", list_state = list_state), 
                selected = "the Entire US")
 )
 
 vaccination_analysis_panel <- mainPanel(
-   h2(textOutput("vaccine_question"))
-   
-)
+   h2(textOutput("vaccine_question")),
+   plotlyOutput("vaccination_plot"))
 
 
 vaccination_data_panel <- tabPanel("Vaccination Data",
