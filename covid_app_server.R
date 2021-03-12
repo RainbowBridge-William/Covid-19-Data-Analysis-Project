@@ -19,16 +19,20 @@ app_server <- function(input, output) {
     return(question)
     })
   
+
+  
   output$vaccination_plot <- renderPlotly({
+    # filter the data frame based on input
     filtered_vaccine_vs_rate_case <- vaccine_vs_rate_case
     if (input$vaccine_state_select != "the Entire US") {
       filtered_vaccine_vs_rate_case <- filter(filtered_vaccine_vs_rate_case,
                                               State == input$vaccine_state_select)
       }
-    
     vaccine_plot_title <- paste("The Daily Rate of Cases per 100k vs Percent of Vaccination Population in",
                                 input$vaccine_state_select)
+
     
+    # plot the graph
     filtered_vaccine_vs_rate_case_scatter_plot <- ggplot(data = filtered_vaccine_vs_rate_case, mapping =
                                                   aes(x = ratio_people_vaccinated,
                                                       y = case_rate,
@@ -46,11 +50,22 @@ app_server <- function(input, output) {
     
     ggplotly(filtered_vaccine_vs_rate_case_scatter_plot, tooltip = "text")
     
+
   })
+  
   
   output$vaccination_description <- renderText({
     
+    filtered_vaccine_vs_rate_case <- vaccine_vs_rate_case
+    if (input$vaccine_state_select != "the Entire US") {
+      filtered_vaccine_vs_rate_case <- filter(filtered_vaccine_vs_rate_case,
+                                              State == input$vaccine_state_select)
+    }
+    
+    # print the slope of smooth line
+    round(coef(lm(ratio_people_vaccinated * 100 ~ case_rate, data = filtered_vaccine_vs_rate_case))[2],2)
   })
+  
   #*********Hospital************
   output$hospitalsVisualization <- renderPlotly({
 
