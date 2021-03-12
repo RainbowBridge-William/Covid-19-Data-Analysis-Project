@@ -62,9 +62,16 @@ app_server <- function(input, output) {
                                               State == input$vaccine_state_select)
     }
     
-    # print the slope of smooth line
-    round(coef(lm(ratio_people_vaccinated * 100 ~ case_rate, data = filtered_vaccine_vs_rate_case))[2],2)
+    # get the slope of smooth line
+    slope <- round(coef(lm(ratio_people_vaccinated * 100 ~ case_rate, data = filtered_vaccine_vs_rate_case))[2],2)
+
+    paste("The following scatter plot shows the correlation of the daily rate of cases per 100k and percent of vaccined population in ",
+          input$vaccine_state_select," after the distribution of vaccine across the US. Each dot representes a state at a specific date and 
+          we could observe the general relationship from the blue linear regression fit of the scatter points.","\n", "\n","In current location(",
+          input$vaccine_state_select,"), the slope of regression line is near ",slope, ", which means a weak negative correlation. Overall, it 
+          clearly shows that the higher percentage of vaccined population, the lower rate of cases increase.",sep = "")
   })
+  
   
   #*********Hospital************
   output$hospitalsVisualization <- renderPlotly({
