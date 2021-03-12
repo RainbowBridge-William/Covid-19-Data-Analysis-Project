@@ -150,8 +150,10 @@ app_server <- function(input, output) {
       summarize(mean = mean(cases)) %>%
       pull(mean)
     
-    return(paste0("For each county, an average of ", formatC(average_percent, 2, format = "f"), "% of people reported that they \"", survey_answer, "\" wear a mask.
-                  Sorted by the percent of people who reported \"", survey_answer, "\" wearing a mask, the top 50% of counties had an average of ",
+    return(paste0("For each county, an average of ", formatC(average_percent, 2, format = "f"),
+                  "% of people reported that they \"", survey_answer, "\" wear a mask.
+                  Sorted by the percent of people who reported \"", survey_answer,
+                  "\" wearing a mask, the top 50% of counties had an average of ",
                   round(top_50_percent_mean), " COVID cases, and the bottom 50% had an average of ",
                   round(bottom_50_percent_mean), " cases."))
   })
