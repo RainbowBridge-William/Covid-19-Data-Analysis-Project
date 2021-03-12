@@ -7,7 +7,7 @@ library("stringr")
 library("shiny")
 library("shinythemes")
 
-source("section_2.R")
+source("section_3.R")
 
 domain_description <-
   "COVID-19, which is short for coronavirus disease
@@ -107,7 +107,27 @@ introduction_panel <- tabPanel(("Background"),
 
 hospital_data_panel <- tabPanel("Hospital Data")
 
-vaccination_data_panel <- tabPanel("Vaccination Data")
+#****************** Vaccination Panel********************
+vaccination_controls_panel <- sidebarPanel(
+   #select box for selecting states
+   selectInput("vaccine_state_select", label = h3("State"), 
+               choices = list("Over All (Entire US)" = "the Entire US", list_state = list_state), 
+               selected = "the Entire US")
+)
+
+vaccination_analysis_panel <- mainPanel(
+   h2(textOutput("vaccine_question"))
+)
+
+
+vaccination_data_panel <- tabPanel("Vaccination Data",
+                                   sidebarLayout(
+                                      vaccination_controls_panel,
+                                      vaccination_analysis_panel
+                                   ))
+
+
+#*********************************************************
 
 mask_data_panel <- tabPanel("Mask Use Data")
 
