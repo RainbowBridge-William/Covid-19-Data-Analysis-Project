@@ -137,5 +137,24 @@ app_server <- function(input, output) {
     return(plot)
   })
   
+  output$mask_use_text <- renderText({
+    average_percent <- mean(mask_use_vs_cases_df[[input$survey_answer]]) * 100
+    survey_answer <- names(mask_survey_answers)[mask_survey_answers == input$survey_answer]
+    
+    top_50_percent_mean <- mask_use_vs_cases_df %>%
+      top_frac(0.5, .data[[input$survey_answer]]) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean)
+    bottom_50_percent_mean <- mask_use_vs_cases_df %>%
+      top_frac(-0.5, .data[[input$survey_answer]]) %>%
+      summarize(mean = mean(cases)) %>%
+      pull(mean)
+    
+    return(paste0("For each county, an average of ", formatC(average_percent, 2, format = "f"), "% of people reported that they \"", survey_answer, "\" wear a mask.
+                  Sorted by the percent of people who reported \"", survey_answer, "\" wearing a mask, the top 50% of counties had an average of ",
+                  round(top_50_percent_mean), " COVID cases, and the bottom 50% had an average of ",
+                  round(bottom_50_percent_mean), " cases."))
+  })
+  
 }
 

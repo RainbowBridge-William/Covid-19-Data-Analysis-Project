@@ -150,13 +150,25 @@ mask_survey_answers <- c(
 mask_data_panel <- tabPanel(
    "Mask Use Data",
    h2("How is self-reported mask-wearing related to the number of cases for each county in the United States?"),
+   p("Given a survey asking \"How often do you wear a mask in public when you
+    expect to be within six feet of another person?\", with 5 different levels of
+    responses, is there any correlation between counties that have more COVID
+    cases and counties with people who answer in a particular way?"),
+   p("The survey was done in 2020 from July 2 to July 14, and the number of
+     COVID cases in each county was recorded on July 14, 2020."),
    sidebarLayout(
       sidebarPanel(
          selectInput("survey_answer", "Survey answer", mask_survey_answers),
          checkboxInput("use_log_scale", "Use log scale", FALSE)
       ),
       mainPanel(
-         plotOutput("mask_use_plot")
+         plotOutput("mask_use_plot"),
+         br(),
+         textOutput("mask_use_text"),
+         br(),
+         p("Counties with more people who report that they wear a mask in
+           public, also have more COVID cases. This unexpected, because masks
+           are supposed to slow the spread of COVID. Instead, this is probably the result of people wearing a mask", em("because"), "their county has a large number of cases.")
       )
    )
 )
@@ -247,7 +259,7 @@ stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
 
 
 app_UI <- fluidPage(theme = shinytheme("slate"), 
-                    titlePanel(h1("Covid-19 Data Analysis")), 
+                    titlePanel("COVID-19 Data Analysis"), 
                     navbarPage(title = strong("Menu"), 
                                introduction_panel, 
                                hospital_data_panel, 
