@@ -89,8 +89,9 @@ vaccine_vs_rate_case <- left_join(percent_vaccination_df, rate_case_df, by = c("
   na.omit()
 
 # list of state for selectbox
-list_state <- vaccine_vs_rate_case$State %>% 
-  unique()
+states <- vaccine_vs_rate_case$State %>% 
+  unique() %>% 
+  sort()
 
 # plot the graph
 vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping =

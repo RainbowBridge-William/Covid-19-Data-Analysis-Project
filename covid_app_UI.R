@@ -110,8 +110,8 @@ hospital_data_panel <- tabPanel("Hospital Data")
 #****************** Vaccination Panel********************
 vaccination_controls_panel <- sidebarPanel(
    #select box for selecting states
-   selectInput("vaccine_state_select", label = h4("select which state to visualize data for:"), 
-               choices = list("Over All (Entire US)" = "the Entire US", list_state = list_state), 
+   selectInput("vaccine_state_select", label = h4("Select which state to visualize data for:"), 
+               choices = list("Overall (Entire US)" = "the Entire US", states = states), 
                selected = "the Entire US")
 )
 
@@ -174,7 +174,7 @@ stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                           )
 
 app_UI <- fluidPage(theme = shinytheme("slate"), 
-                    titlePanel(h1("Covid-19 Data")), 
+                    titlePanel(h1("Covid-19 Data Analysis")), 
                     navbarPage(title = strong("Menu"), 
                                introduction_panel, 
                                hospital_data_panel, 

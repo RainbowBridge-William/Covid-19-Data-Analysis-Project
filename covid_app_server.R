@@ -23,7 +23,7 @@ app_server <- function(input, output) {
     filtered_vaccine_vs_rate_case <- vaccine_vs_rate_case
     if (input$vaccine_state_select != "the Entire US") {
       filtered_vaccine_vs_rate_case <- filter(filtered_vaccine_vs_rate_case,
-               State == input$vaccine_state_select)
+                                              State == input$vaccine_state_select)
       }
     
     vaccine_plot_title <- paste("The Daily Rate of Cases per 100k vs Percent of Vaccination Population in",
@@ -40,6 +40,7 @@ app_server <- function(input, output) {
            x = "Percent of Vaccination Population", y = "Daily Cases Rate per 100k Population")
     
     ggplotly(filtered_vaccine_vs_rate_case_scatter_plot)
+    
   })
   
   #*********Hospital************
@@ -52,7 +53,7 @@ app_server <- function(input, output) {
         TRUE ~ abb %in% input$hospitalsStateSelectize
       ))
 
-    filtered_healthcare_facility_count_death_rate_plot <- ggplot(data = filtered_death_rate_hospitals_df) +
+    filtered_healthcare_facility_count_death_rate_plot <- ggplotly(data = filtered_death_rate_hospitals_df) +
       geom_point(mapping = aes(x = count, y = death_rate)) +
       geom_smooth(mapping = aes(x = count, y = death_rate), method = "lm") +
       labs(
@@ -60,6 +61,6 @@ app_server <- function(input, output) {
         y = "Deaths per 100,000"
       )
 
-    ggplotly(filtered_healthcare_facility_count_death_rate_plot)
+    return(filtered_healthcare_facility_count_death_rate_plot)
   })
 }
