@@ -96,8 +96,8 @@ vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping
   geom_smooth(mapping = aes(x = ratio_people_vaccinated, y = case_rate), method = "lm", formula = y ~ x) +
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous() +
-  labs(title = "The Daily Rate of Cases vs Percent of Vaccination Population\n in each state Over Time", 
-       x = "Percent of Vaccination Population", y = "COVID Cases Rate per 100k Population")
+  labs(title = "The Daily Rate of Cases per 100k vs Percent of Vaccination Population\n in each state Over Time", 
+       x = "Percent of Vaccination Population", y = "Daily Cases Rate per 100k Population")
 
 
 # ***** How is self-reported mask-wearing related to the number of cases for each county in the United States? *****

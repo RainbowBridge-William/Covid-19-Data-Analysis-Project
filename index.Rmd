@@ -241,6 +241,9 @@ healthcare_facility_count_death_rate_plot
 Based on the results of the analysis, it does not appear as though there is a significant relationship between the number or types of hospitals in a state or territory and the death rate from COVID-19. This is evidenced largely through the six faceted scatter plots, as in each plot, the trend line depicted clearly does not depict a significant correlation between the the facility count and death rate. Interestingly enough, contrary to my belief, three of the six trends actually depicted slight increases in the death rate with increases in the number of hospitals, specifically those that are level I, level II, or non-trauma hospitals. Level V trauma centers depicted a slight downwards trend, whereas the level III and level IV centers appearred to have no correlation at all with death rate.
 
 One of the most interesting things that this might suggest is the important of wearing a mask and practicing proper social distancing. As seen in the geographic distribution of trauma centers, lower level (levels I and II) trauma centers and non-trauma hospitals tend to be grouped near population hotspots in urban cities such as Los Angeles, Houston, Chicago, and New York, to name a few. This suggests that the death rate is more concerned with the ability of the virus to spread among individuals, which is the case in these large urban areas. This would support what public health officials have been saying the vast majority of the time, which is that it is so very critical for every, but especially those coming into contact with those outside of their household often, to wash their hands, wear a mask, and keep your distance.
+<br>
+<br>
+
 
 #### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 Rate of cases here is the ratio of new cases and total population for each state on the most recent date. Percent of vaccination population is the percentage of population that has given a vaccine.
@@ -259,9 +262,12 @@ According to both quantitative and graphical result, it shows that there is a sl
 
 This result is unexpected to me. I was originally sure of this correlation to be strong. My assumption is as the percentage of vaccination population goes up, the cases rate goes down. The possible reasons for this unexpectency are:
 
-- Lack of data due to the fact that CDC vaccination overtime data By State is not available to public. Only vaccination data for each state at most recent data and overtime data for the entire US is available
+
 - Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across different states, different attitude towards mask, and different population density.
 - The result of vaccination may take a longer time to reflect on the case rate since there are still relatively few people taken the vaccine and the actual implement of vaccine is less than three month.
+
+<br>
+<br>
 
 #### How is self-reported mask-wearing related to the number of cases for each county in the United States?
 
