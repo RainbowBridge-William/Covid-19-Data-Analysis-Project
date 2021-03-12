@@ -117,7 +117,10 @@ vaccination_controls_panel <- sidebarPanel(
 
 vaccination_analysis_panel <- mainPanel(
    h2(textOutput("vaccine_question")),
-   plotlyOutput("vaccination_plot"))
+   plotlyOutput("vaccination_plot"),
+   br(),
+   p(textOutput("vaccination_description"))
+   )
 
 
 vaccination_data_panel <- tabPanel("Vaccination Data",

@@ -31,18 +31,26 @@ app_server <- function(input, output) {
     
     filtered_vaccine_vs_rate_case_scatter_plot <- ggplot(data = filtered_vaccine_vs_rate_case, mapping =
                                                   aes(x = ratio_people_vaccinated,
-                                                      y = case_rate)) +
-      geom_point(size = 1) +
+                                                      y = case_rate,
+                                                      )) +
+      geom_point(size = 1, aes(text = paste0('Percent of Vaccination Population:',
+                                        paste(ratio_people_vaccinated*100,"%"),
+                                        '<br>Cases Rate per 100k:',
+                                        round(case_rate)
+      ))) +
       geom_smooth(mapping = aes(x = ratio_people_vaccinated, y = case_rate), method = "lm", formula = y ~ x) +
       scale_x_continuous(labels = scales::percent) +
       scale_y_continuous() +
       labs(title = vaccine_plot_title,
            x = "Percent of Vaccination Population", y = "Daily Cases Rate per 100k Population")
     
-    ggplotly(filtered_vaccine_vs_rate_case_scatter_plot)
+    ggplotly(filtered_vaccine_vs_rate_case_scatter_plot, tooltip = "text")
     
   })
   
+  output$vaccination_description <- renderText({
+    
+  })
   #*********Hospital************
   output$hospitalsVisualization <- renderPlotly({
 
