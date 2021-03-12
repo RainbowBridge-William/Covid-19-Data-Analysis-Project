@@ -32,7 +32,7 @@ hospital_counts_by_state_df <- hospital_type_counts_by_state_df %>%
     key = type,
     value = count,
     -State
-  )
+  ) 
 
 death_rate_hospitals_df <- most_recent_total_deaths_with_state_map_data_df %>%
   left_join(population_state_df %>% mutate(state_territory = tolower(State))) %>% 
@@ -58,40 +58,45 @@ healthcare_facility_count_death_rate_plot <- ggplot(data = death_rate_hospitals_
   )
 
 # ***** Does the percent of vaccination population in each state affect the rate of cases? If so, how? *****
-new_case_most_recent_df <- jhu_cases_time_series_df %>% 
-  filter(date == max(date) | date == max(date) - 1) %>% 
-  group_by(state_territory) %>% 
-  summarize(new_case_most_recent = max(total_cases) - min(total_cases)) %>% 
-  rename(State = state_territory)
+new_case_df <- jhu_cases_time_series_df %>% 
+  group_by(Province_State) %>% 
+  mutate(new_case = total_cases - lag(total_cases)) %>% 
+  rename("State" = "Province_State") %>% 
+  select(State, date, new_case)
 
 # join population df and summarize case rate
-new_case_most_recent_df$State <- str_to_title(new_case_most_recent_df$State) 
-rate_case_df <- new_case_most_recent_df %>% 
+rate_case_df <- new_case_df %>% 
   left_join(population_state_df) %>% 
-  mutate(case_rate_most_recent = new_case_most_recent / Pop) %>% 
-  select(State, case_rate_most_recent)
+  mutate(case_rate = new_case / Pop) %>% 
+  select(State, date, case_rate)
 
-# wrangling percent ofvaccination 
+rate_case_df$date <- as.character.Date(rate_case_df$date)
+
+# wrangling percent of vaccination 
 percent_vaccination_df <- vaccination_map_data_df %>% 
-  select(region,Ratio_Doses_Administered) %>% 
+  select(date, region,ratio_people_vaccinated) %>% 
   distinct() %>% 
   na.omit()
+
 ## sort by ratio of doses administered
-percent_vaccination_df <- percent_vaccination_df[order(-percent_vaccination_df$Ratio_Doses_Administered),] %>% 
+percent_vaccination_df <- percent_vaccination_df[order(-percent_vaccination_df$ratio_people_vaccinated),] %>% 
   rename(State = region)
 percent_vaccination_df[percent_vaccination_df=="New York State"] <- "New York"
 
-vaccine_vs_rate_case <- left_join(percent_vaccination_df, rate_case_df)
+vaccine_vs_rate_case <- left_join(percent_vaccination_df, rate_case_df, by = c("date", "State")) %>% 
+  na.omit()
+
+
 
 # plot the graph
 vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping = 
-                                              aes(x = Ratio_Doses_Administered, 
-                                                  y = case_rate_most_recent)) + 
+                                              aes(x = ratio_people_vaccinated, 
+                                                  y = case_rate)) + 
   geom_point(size = 1) +
-  geom_smooth(mapping = aes(x = Ratio_Doses_Administered, y = case_rate_most_recent), method = "lm", formula = y ~ x) +
+  geom_smooth(mapping = aes(x = ratio_people_vaccinated, y = case_rate), method = "lm", formula = y ~ x) +
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
-  labs(title = "The Rate of Cases vs Percent of Vaccination population in each state\n   on most recent date", 
+  labs(title = "The Rate of Cases vs Percent of Vaccination population in each state\n over time", 
        x = "Percent of Vaccination Population", y = "COVID Cases Rate")
 
 

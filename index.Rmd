@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("section_2.R") # Section 3 contains `source("section_2.R")`
+source("section_3.R") # Section 3 contains `source("section_2.R")`
 library("knitr")
 ```
 
@@ -177,7 +177,7 @@ There doesn't seem to be any significant outliers. This is probably because ther
 ---
 
 #### **CDC COVID-19 Vaccinations in the United States**
-By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100` per 100,000 (`r mean_ratio_per_100 * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100` to `r max_vaccination_per_100`.
+By March 10th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100` per 100,000 (`r mean_ratio_per_100 * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100` to `r max_vaccination_per_100`.
 
 ```{r vaccination_by_state_summary_df_}
 kable(vaccination_by_state_summary_df)
@@ -245,10 +245,10 @@ One of the most interesting things that this might suggest is the important of w
 #### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 Rate of cases here is the ratio of new cases and total population for each state on the most recent date. Percent of vaccination population is the percentage of population that has given a vaccine.
 
-To do the data analysis, I first calculate the new cases of each state on most recent date. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
+To do the data analysis, I first calculate the new cases of each state over time. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
 
 ```{r vaccine_vs_rate_case}
-kable(vaccine_vs_rate_case, col.names = c("State", "Most Recent Ratio of Vaccination Population", "Case Rate at Most Recent Date"))
+kable(vaccine_vs_rate_case, col.names = c("Date","State", "Ratio of Vaccination Population", "Case Rate"))
 ```
 
 ```{r vaccine_vs_rate_case_scatter_plot}

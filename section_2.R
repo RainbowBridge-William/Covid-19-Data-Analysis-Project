@@ -29,8 +29,7 @@ jhu_cases_time_series_df <- jhu_cases_time_series_raw_df %>%
   mutate(
     state_territory = tolower(Province_State),
     date = as.Date(date, format = "X%m.%d.%y")
-  ) %>%
-  select(-Province_State)
+  )
 
 most_recent_total_cases_with_state_map_data_df <- jhu_cases_time_series_df %>%
   filter(date == max(date)) %>%
@@ -68,8 +67,7 @@ jhu_deaths_time_series_df <- jhu_deaths_time_series_raw_df %>%
   mutate(
     state_territory = tolower(Province_State),
     date = as.Date(date, format = "X%m.%d.%y")
-  ) %>%
-  select(-Province_State)
+  )
 
 most_recent_total_deaths_with_state_map_data_df <- jhu_deaths_time_series_df %>%
   filter(date == max(date)) %>%
@@ -287,13 +285,13 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
 # ***** CDC Vaccination by State data set *****
 vaccination_by_state_raw_df <- read.csv("data/COVID-19 Vaccinations in the US/us_state_vaccinations.csv") %>% 
   rename("state" = "location")
-vaccination_by_state_sample_df <- vaccination_by_state_df %>% 
+vaccination_by_state_sample_df <- vaccination_by_state_raw_df %>% 
   select(date, state, total_vaccinations, people_vaccinated, people_vaccinated_per_hundred)
 
 # make summary of data set
 vaccination_by_state_summary_df <- vaccination_by_state_raw_df %>%
   na.omit() %>%
-  select(-state) %>%
+  select(total_vaccinations, people_vaccinated, people_vaccinated_per_hundred) %>%
   summary()
 
 # add a column of ratio of population that are given doses for each state
@@ -309,16 +307,17 @@ sum_vaccination <- sum(vaccination_by_state_most_recent_df$people_vaccinated)
 mean_vaccination_per_100 <- round(mean(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T))
 min_vaccination_per_100 <- min(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
 max_vaccination_per_100 <- max(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T)
-mean_ratio_per_100k <- mean(vaccination_by_state_most_recent_df$ratio_people_vaccinated, na.rm = T)
+mean_ratio_per_100 <- mean(vaccination_by_state_most_recent_df$ratio_people_vaccinated, na.rm = T)
 
 # create map data
 vaccination_map_data_df <- map_data("state")
 vaccination_map_data_df$region <- str_to_title(vaccination_map_data_df$region)
 vaccination_map_data_df[vaccination_map_data_df=="New York"] <- "New York State"
-vaccination_map_data_df <- left_join(vaccination_map_data_df, vaccination_by_state_most_recent_df, by = c("region" = "state"))
+vaccination_map_data_most_recent_df <- left_join(vaccination_map_data_df, vaccination_by_state_most_recent_df, by = c("region" = "state"))
+vaccination_map_data_df <- left_join(vaccination_map_data_df, vaccination_by_state_df, by = c("region" = "state"))
 
 # map for total vaccination
-map_total_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(fill = total_vaccinations)) +
+map_total_vaccination <- ggplot(data = vaccination_map_data_most_recent_df, mapping = aes(fill = total_vaccinations)) +
   geom_polygon(mapping = aes(x = long, y = lat, group = group)) +
   scale_fill_distiller(name = "Number of\nVaccination population", palette = "YlOrRd", labels = scales::comma_format(),direction = "horizontal") +
   coord_map() +
@@ -326,7 +325,7 @@ map_total_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(fi
   labs(title = "Total Vaccination Population per State")
 
 # map for vaccination percentage
-map_percent_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(fill = ratio_people_vaccinated)) +
+map_percent_vaccination <- ggplot(data = vaccination_map_data_most_recent_df, mapping = aes(fill = ratio_people_vaccinated)) +
   geom_polygon(mapping = aes(x = long, y = lat, group = group)) +
   scale_fill_distiller(name = "Percentage of\nPopulation\nthat got Vaccine", palette = "YlOrRd", labels = scales::percent,direction = "horizontal") +
   coord_map() +
@@ -334,7 +333,7 @@ map_percent_vaccination <- ggplot(data = vaccination_map_data_df, mapping = aes(
   labs(title = "Percentage of Vaccination Population per State")
 
 # top 5 percent vaccination column graph
-top_5_percent_vaccination_df <- vaccination_map_data_df %>%
+top_5_percent_vaccination_df <- vaccination_map_data_most_recent_df %>%
   select(region,ratio_people_vaccinated) %>%
   distinct() %>%
   slice_max(ratio_people_vaccinated, n = 5)
@@ -351,7 +350,6 @@ top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>%
   scale_y_continuous(labels = scales::percent) +
   labs(title="Top 5 States with Highest Percentage of Vaccination",
        x ="State", y = "Percentage of Vaccination")
-
 
 
 # Stay at home orders for each state
