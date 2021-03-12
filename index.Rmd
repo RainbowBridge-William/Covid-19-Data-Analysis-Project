@@ -248,7 +248,7 @@ Rate of cases here is the ratio of new cases and total population for each state
 To do the data analysis, I first calculate the new cases of each state over time. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
 
 ```{r vaccine_vs_rate_case}
-kable(vaccine_vs_rate_case, col.names = c("Date","State", "Ratio of Vaccination Population", "Case Rate"))
+kable(head(vaccine_vs_rate_case), col.names = c("Date","State", "Ratio of Vaccination Population", "Case Rate"))
 ```
 
 ```{r vaccine_vs_rate_case_scatter_plot}

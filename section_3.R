@@ -67,7 +67,7 @@ new_case_df <- jhu_cases_time_series_df %>%
 # join population df and summarize case rate
 rate_case_df <- new_case_df %>% 
   left_join(population_state_df) %>% 
-  mutate(case_rate = new_case / Pop) %>% 
+  mutate(case_rate = (new_case * 100000)/ Pop) %>% 
   select(State, date, case_rate)
 
 rate_case_df$date <- as.character.Date(rate_case_df$date)
@@ -95,9 +95,9 @@ vaccine_vs_rate_case_scatter_plot <- ggplot(data = vaccine_vs_rate_case, mapping
   geom_point(size = 1) +
   geom_smooth(mapping = aes(x = ratio_people_vaccinated, y = case_rate), method = "lm", formula = y ~ x) +
   scale_x_continuous(labels = scales::percent) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(title = "The Rate of Cases vs Percent of Vaccination population in each state\n over time", 
-       x = "Percent of Vaccination Population", y = "COVID Cases Rate")
+  scale_y_continuous() +
+  labs(title = "The Daily Rate of Cases vs Percent of Vaccination Population\n in each state Over Time", 
+       x = "Percent of Vaccination Population", y = "COVID Cases Rate per 100k Population")
 
 
 # ***** How is self-reported mask-wearing related to the number of cases for each county in the United States? *****
