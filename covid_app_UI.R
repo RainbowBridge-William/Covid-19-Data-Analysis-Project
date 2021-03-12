@@ -118,7 +118,8 @@ vaccination_controls_panel <- sidebarPanel(
    #select box for selecting states
    selectInput("vaccine_state_select", label = h4("Select which state to visualize data for:"), 
                choices = list("Overall (Entire US)" = "the Entire US", states = states), 
-               selected = "the Entire US")
+               selected = "the Entire US"),
+   h4("**Hover on the dots to see more information**")
 )
 
 vaccination_analysis_panel <- mainPanel(
@@ -197,7 +198,7 @@ stay_home_order_state_selector <-
 stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
                                           stay_home_order_time_slider,
                                           stay_home_order_filter_buttons,
-                                          stay_home_order_state_selector
+                                          stay_home_order_state_selector)
 
 year_slider_control <- sliderInput(inputId = "days_after_order",
                                    label = h5("Days After Order: "),
@@ -253,3 +254,4 @@ app_UI <- fluidPage(theme = shinytheme("slate"),
                                vaccination_data_panel, 
                                mask_data_panel, 
                                stay_home_order_data_panel)
+                     )
