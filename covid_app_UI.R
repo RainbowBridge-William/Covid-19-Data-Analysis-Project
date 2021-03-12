@@ -150,7 +150,27 @@ hospital_data_panel <- tabPanel(
 
 vaccination_data_panel <- tabPanel("Vaccination Data")
 
-mask_data_panel <- tabPanel("Mask Use Data")
+mask_survey_answers <- c(
+   "Never" = "NEVER",
+   "Rarely" = "RARELY",
+   "Sometimes" = "SOMETIMES",
+   "Frequently" = "FREQUENTLY",
+   "Always" = "ALWAYS"
+)
+
+mask_data_panel <- tabPanel(
+   "Mask Use Data",
+   h2("How is self-reported mask-wearing related to the number of cases for each county in the United States?"),
+   sidebarLayout(
+      sidebarPanel(
+         selectInput("survey_answer", "Survey answer", mask_survey_answers),
+         checkboxInput("use_log_scale", "Use log scale", FALSE)
+      ),
+      mainPanel(
+         plotOutput("mask_use_plot")
+      )
+   )
+)
 
 year_slider_control <- sliderInput(inputId = "days_after_order",
                                    label = h5("Days After Order: "),
@@ -195,7 +215,7 @@ stay_at_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                           )
 
 app_UI <- fluidPage(theme = shinytheme("slate"),
-                    titlePanel(h1("COVID-19 Data")),
+                    titlePanel("COVID-19 Data"),
                     navbarPage(title = strong("Menu"),
                                introduction_panel,
                                hospital_data_panel,

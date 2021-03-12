@@ -30,5 +30,22 @@ app_server <- function(input, output) {
 
     ggplotly(filtered_healthcare_facility_count_death_rate_plot)
   })
-
+  
+  output$mask_use_plot <- renderPlot({
+    x_label <- paste0("Percent of people in a county who say they \"", names(mask_survey_answers)[mask_survey_answers == input$survey_answer], "\" wear a mask")
+    
+    plot <- ggplot(data = mask_use_vs_cases_df, mapping = aes_string(x = input$survey_answer, y = "cases")) +
+      geom_point(size = 0.8) +
+      scale_x_continuous(labels = scales::percent) +
+      labs(title = "Mask-wearing vs COVID cases on July 14, 2020", x = x_label, y = "COVID cases")
+    
+    if (input$use_log_scale) {
+      plot <- plot + scale_y_log10(labels = scales::label_comma())
+    } else {
+      plot <- plot + scale_y_continuous(labels = scales::label_comma())
+    }
+    
+    return(plot)
+  })
+  
 }
