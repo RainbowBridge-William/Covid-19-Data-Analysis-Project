@@ -6,6 +6,7 @@ library("maps")
 library("stringr")
 library("shiny")
 library("shinythemes")
+library("usa")
 
 source("section_3.R")
 
@@ -112,13 +113,55 @@ introduction_panel <- tabPanel(("Background"),
                                p(stay_home_order_data_description)
                                )
 
-hospital_data_panel <- tabPanel("Hospital Data")
+united_states_possessions <- usa::states %>%
+   merge(territory, all = TRUE)
+
+#   ***** Hospitals *****
+hospital_data_panel <- tabPanel(
+   "Hospital Data",
+   sidebarLayout(
+
+      sidebarPanel(
+         selectizeInput(
+            "hospitalsTypeSelectize",
+            "Facility Type",
+            c(
+               "Non-trauma" = "non_trauma",
+               "Level I" = "level_i",
+               "Level II" = "level_ii",
+               "Level III" = "level_iii",
+               "Level IV" = "level_iv",
+               "Level V" = "level_v"
+            )
+         ),
+         selectizeInput(
+            "hospitalsStateSelectize",
+            "State/Territory",
+            setNames(united_states_possessions$abb, united_states_possessions$name),
+            multiple = TRUE,
+            options = list(
+               "allowEmptyOption" = TRUE,
+               "showEmptyOptionInDropdown" = TRUE,
+               "emptyOptionLabel" = "All U.S. Possessions",
+               "placeholder" = "All U.S. Possessions"
+            )
+         )
+      ),
+
+      mainPanel(
+         plotlyOutput("hospitalsVisualization"),
+         br(),
+         textOutput("hospitalsText")
+      )
+
+   )
+)
 
 #****************** Vaccination Panel********************
 vaccination_controls_panel <- sidebarPanel(
    #select box for selecting states
-   selectInput("vaccine_state_select", label = h4("Select which state to visualize data for:"), 
-               choices = list("Overall (Entire US)" = "the Entire US", states = states), 
+   selectInput("vaccine_state_select", label = h4("Select which state to visualize data for:"),
+               choices = list("Overall (Entire US)" = "the Entire US", states = states),
                selected = "the Entire US"),
    h4("**Hover on the dots to see more information**")
 )
@@ -180,11 +223,11 @@ mask_data_panel <- tabPanel(
 
 stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
                                               label = h5("Days Since Order: "),
-                                              value = 30, 
-                                              min = 0, 
+                                              value = 30,
+                                              min = 0,
                                               max = 90)
 
-stay_home_order_filter_buttons <- radioButtons(inputId = "filter", 
+stay_home_order_filter_buttons <- radioButtons(inputId = "filter",
                                                   label = h5("Time vs.: "),
                                                   choices = c("New Daily Cases",
                                                               "Daily Change In Number of New Cases",
@@ -192,14 +235,14 @@ stay_home_order_filter_buttons <- radioButtons(inputId = "filter",
                                                               )
                                                   )
 
-stay_home_order_state_selector_choice_list <- as.list(append("Country Average", 
-                                                               state_stay_at_home_order_data_df$State, 
+stay_home_order_state_selector_choice_list <- as.list(append("Country Average",
+                                                               state_stay_at_home_order_data_df$State,
                                                                0
                                                                )
                                                       )
 
-stay_home_order_state_selector <- 
-  selectizeInput(inputId = "state", 
+stay_home_order_state_selector <-
+  selectizeInput(inputId = "state",
                  label = h5("State:"),
                  choices = stay_home_order_state_selector_choice_list,
                  options = list(
@@ -218,20 +261,20 @@ stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
 
 year_slider_control <- sliderInput(inputId = "days_after_order",
                                    label = h5("Days After Order: "),
-                                   value = 30, 
-                                   min = 1, 
+                                   value = 30,
+                                   min = 1,
                                    max = 90)
 
-button_filter_control <- radioButtons(inputId = "filter", 
+button_filter_control <- radioButtons(inputId = "filter",
                                       label = "Filter",
                                       choices = c("Decrease In Cases After Order",
                                                   "Daily Cases After Order")
                                       )
 
-menu_control <- selectizeInput(inputId = "state", 
+menu_control <- selectizeInput(inputId = "state",
                             label = h5("State:"),
-                            list(choices = append("Country Average", 
-                                                  state_stay_at_home_order_data_df$State, 
+                            list(choices = append("Country Average",
+                                                  state_stay_at_home_order_data_df$State,
                                                   0)
                                  ),
                             options = list(
@@ -262,12 +305,12 @@ stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                           )
 
 
-app_UI <- fluidPage(theme = shinytheme("slate"), 
-                    titlePanel("COVID-19 Data Analysis"), 
-                    navbarPage(title = strong("Menu"), 
-                               introduction_panel, 
-                               hospital_data_panel, 
-                               vaccination_data_panel, 
-                               mask_data_panel, 
+app_UI <- fluidPage(theme = shinytheme("slate"),
+                    titlePanel("COVID-19 Data Analysis"),
+                    navbarPage(title = strong("Menu"),
+                               introduction_panel,
+                               hospital_data_panel,
+                               vaccination_data_panel,
+                               mask_data_panel,
                                stay_home_order_data_panel)
                      )
