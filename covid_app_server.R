@@ -12,6 +12,8 @@ app_server <- function(input, output) {
 
   #********stay home order*************
     output$stay_home_order_analysis_visual <- renderPlot({
+      print(input$filter)
+
       stay_home_order_plot_df <- stay_home_order_analysis_df %>%
         select(State,
                input$filter,

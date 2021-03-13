@@ -6,6 +6,7 @@ library("maps")
 library("stringr")
 library("shiny")
 library("shinythemes")
+library("usa")
 
 source("section_3.R")
 
@@ -225,16 +226,16 @@ mask_data_panel <- tabPanel(
 
 stay_home_order_time_slider <- sliderInput(inputId = "max_date",
                                            label = h5("Date Range: "),
-                                           min = min(state_stay_at_home_order_data_df$Order.date), 
+                                           min = min(state_stay_at_home_order_data_df$Order.date),
                                            max = max(state_stay_at_home_order_data_df$Order.date) + 90,
                                            value = min(state_stay_at_home_order_data_df$Order.date) + 30
                                            )
 
-stay_home_order_filter_buttons <- radioButtons(inputId = "filer",
+stay_home_order_filter_buttons <- radioButtons(inputId = "filter",
                                                label = h5("Time vs. : "),
-                                               choices = c("New Daily Cases",
-                                                           "Numer of Contagious Cases",
-                                                           "Percent Population Contagious"
+                                               choices = c("Number of New Cases",
+                                                           "Number of Contagious Cases",
+                                                           "State Contagious Population Percentage"
                                                            )
                                                )
 
@@ -271,7 +272,7 @@ year_slider_control <- sliderInput(inputId = "days_after_order",
 button_filter_control <- radioButtons(inputId = "filter",
                                       label = "Date vs :",
                                       choices = c("Number of New Cases",
-                                                  "Number of Contagious Cases", 
+                                                  "Number of Contagious Cases",
                                                   "Percent Population Contagious")
 )
 
@@ -300,11 +301,11 @@ stay_home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders 
                                             hr(),
                                             hr(),
                                             p("After observing this vizualization of how different Covid-19 statistics change
-                                               over the 90 days following stay at home orders going into effect, in each state, 
-                                              we can conclude that while they do little to reverse the spread of Covid-19, they 
+                                               over the 90 days following stay at home orders going into effect, in each state,
+                                              we can conclude that while they do little to reverse the spread of Covid-19, they
                                               do help slow the spread."),
                                             hr(),
-                                            p(textOuput("stay_home_order_analysis_text"))
+                                            p(textOutput("stay_home_order_analysis_text"))
                                             )
 
 stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
