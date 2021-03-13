@@ -6,6 +6,7 @@ library("maps")
 library("stringr")
 library("shiny")
 library("shinythemes")
+library("usa")
 
 source("section_3.R")
 
@@ -114,7 +115,7 @@ introduction_panel <- tabPanel(("Background"),
 
 hospital_data_panel <- tabPanel("Hospital Data")
 united_states_possessions <- usa::states %>%
-   merge(territory, all = TRUE)
+   merge(usa::territory, all = TRUE)
 
 #   ***** Hospitals *****
 hospital_data_panel <- tabPanel(
@@ -225,7 +226,7 @@ mask_data_panel <- tabPanel(
 
 stay_home_order_time_slider <- sliderInput(inputId = "max_date",
                                            label = h5("Date Range: "),
-                                           min = min(state_stay_at_home_order_data_df$Order.date), 
+                                           min = min(state_stay_at_home_order_data_df$Order.date),
                                            max = max(state_stay_at_home_order_data_df$Order.date) + 90,
                                            value = min(state_stay_at_home_order_data_df$Order.date) + 30
                                            )
@@ -271,7 +272,7 @@ year_slider_control <- sliderInput(inputId = "days_after_order",
 button_filter_control <- radioButtons(inputId = "filter",
                                       label = "Date vs :",
                                       choices = c("Number of New Cases",
-                                                  "Number of Contagious Cases", 
+                                                  "Number of Contagious Cases",
                                                   "Percent Population Contagious")
 )
 
