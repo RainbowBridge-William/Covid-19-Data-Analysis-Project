@@ -222,32 +222,29 @@ mask_data_panel <- tabPanel(
 )
 
 #*************************Stay Home Order****************************************************
-<<<<<<< HEAD
-#*
-=======
->>>>>>> ec04384e7f362221d2d16401418f29853237a56e
-stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
-                                           label = h5("Days Since Order: "),
-                                           value = 30,
-                                           min = 0,
-                                           max = 90)
 
-stay_home_order_filter_buttons <- radioButtons(inputId = "option",
-                                               label = h5("Time vs.: "),
-                                               choices = c("New Daily Cases" = "New Daily Cases",
-                                                           "Daily Change In Number of New Cases" = "Daily Change In Number of New Cases",
-                                                           "Cumulative Difference Between Initial and Current Daily Change" = "Cumulative Difference Between Initial and Current Daily Change"
+stay_home_order_time_slider <- sliderInput(inputId = "max_date",
+                                           label = h5("Date Range: "),
+                                           min = min(state_stay_at_home_order_data_df$Order.date), 
+                                           max = max(state_stay_at_home_order_data_df$Order.date) + 90,
+                                           value = min(state_stay_at_home_order_data_df$Order.date) + 30
+                                           )
+
+stay_home_order_filter_buttons <- radioButtons(inputId = "filer",
+                                               label = h5("Time vs. : "),
+                                               choices = c("New Daily Cases",
+                                                           "Numer of Contagious Cases",
+                                                           "Percent Population Contagious"
+                                                           )
                                                )
-)
 
 stay_home_order_state_selector_choice_list <- as.list(append("Country Average",
                                                              state_stay_at_home_order_data_df$State,
                                                              0
-)
-)
+                                                             )
+                                                      )
 
 stay_home_order_state_selector <-
-
   selectizeInput(inputId = "state",
                  label = h5("State:"),
                  choices = stay_home_order_state_selector_choice_list,
@@ -272,13 +269,13 @@ year_slider_control <- sliderInput(inputId = "days_after_order",
                                    max = 90)
 
 button_filter_control <- radioButtons(inputId = "filter",
-                                      label = "Filter",
-                                      choices = c("Decrease In Cases After Order",
-                                                  "Daily Cases After Order")
+                                      label = "Date vs :",
+                                      choices = c("Number of New Cases",
+                                                  "Number of Contagious Cases", 
+                                                  "Percent Population Contagious")
 )
 
 menu_control <- selectizeInput(inputId = "state",
-<<<<<<< HEAD
                             label = h5("State:"),
                             list(choices = append("Country Average",
                                                   state_stay_at_home_order_data_df$State,
@@ -290,19 +287,6 @@ menu_control <- selectizeInput(inputId = "state",
                             selected = "Country Average",
                             multiple = TRUE
                             )
-=======
-                               label = h5("State:"),
-                               list(choices = append("Country Average",
-                                                     state_stay_at_home_order_data_df$State,
-                                                     0)),
-                               options = list(
-                                  highlight = FALSE,
-                                  maxOptions = 3,
-                                  placeholder = "Search for state and/or country average"),
-                               selected = "Country Average",
-                               multiple = TRUE
-)
->>>>>>> ec04384e7f362221d2d16401418f29853237a56e
 
 home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
                                           year_slider_control,

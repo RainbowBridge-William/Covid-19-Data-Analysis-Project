@@ -224,8 +224,8 @@ stay_home_order_analysis_df <- stay_home_order_analysis_df %>%
   rename("Number of New Cases" = new_cases,
          "Number of Contagious Cases" = contagious_cases, 
          "State Contagious Population Percentage" = percent_population_contagious,
-         "Percent Change In Contagious Cases" = percent_change_contagious_cases, 
          "Date" = date) 
 
   
+
 

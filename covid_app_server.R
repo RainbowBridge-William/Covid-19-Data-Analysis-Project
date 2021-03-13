@@ -7,15 +7,13 @@ library("stringr")
 library("plotly")
 
 source("section_3.R")
-<<<<<<< HEAD
-=======
 
->>>>>>> ec04384e7f362221d2d16401418f29853237a56e
 
 
 app_server <- function(input, output) {
   create_stay_home_order_visualization(input, output)
   # create_stay_home_order_visualization_description(input, output)
+}
 
 #********stay home order*************
 create_stay_home_order_visualization <- function(input, output) {
@@ -48,16 +46,12 @@ create_stay_home_order_visualization <- function(input, output) {
         ylim(c(NA, 100000))
       } else if (input$option == "State Contagious Population Percentage") {
         ylim(c(NA, 1))
-      } else {
-        ylim(c(NA, 15))
-      }
-      
+      } 
+    
     stay_home_order_analysis_visualization                            
   })
 }
 
-<<<<<<< HEAD
-=======
 app_server <- function(input, output) {
   create_stay_home_order_visualization(input, output)
   # create_stay_home_order_visualization_description(input, output)
@@ -95,16 +89,12 @@ app_server <- function(input, output) {
           ylim(c(NA, 100000))
         } else if (input$filter == "State Contagious Population Percentage") {
           ylim(c(NA, 1))
-        } else {
-          ylim(c(NA, 15))
-        }
+        } 
       
       stay_home_order_analysis_visualization                            
     })
+}
 
-
-
->>>>>>> ec04384e7f362221d2d16401418f29853237a56e
   #*******Vaccine**********
   output$vaccine_question <- renderText({
     question <- paste("Does the vaccination population affect the rate of cases? If so, how?")
@@ -243,4 +233,3 @@ app_server <- function(input, output) {
                   round(top_50_percent_mean), " COVID cases, and the bottom 50% had an average of ",
                   round(bottom_50_percent_mean), " cases."))
     })
-  }
