@@ -7,6 +7,10 @@ library("stringr")
 library("plotly")
 
 source("section_3.R")
+<<<<<<< HEAD
+=======
+
+>>>>>>> ec04384e7f362221d2d16401418f29853237a56e
 
 
 app_server <- function(input, output) {
@@ -18,9 +22,9 @@ create_stay_home_order_visualization <- function(input, output) {
   output$stay_home_order_analysis_visual <- renderPlot({
     stay_home_order_plot_df <- stay_home_order_analysis_df %>%
       select(State, 
-             input$filter, 
-             Date) %>%
-      pivot_longer(input$filter, 
+             input$option, 
+             Date) %>% 
+      pivot_longer(input$option, 
                    "Category") %>%
       filter(value > 0) %>%
       pivot_wider(id_cols = c(Date, Category), 
@@ -34,15 +38,15 @@ create_stay_home_order_visualization <- function(input, output) {
       geom_line(mapping = aes(x = Date,
                               y = value,
                               color = State)) + 
-      labs(title = paste("Date vs.", input$filter),
+      labs(title = paste("Date vs.", input$option),
            x = "Date",
-           y = input$filter) + 
+           y = input$option) + 
       scale_x_date(limits = c(as.Date("2020-03-19", "%Y-%m-%d"), input$max_date)) +
-      if(input$filter == "Number of New Cases") {
+      if(input$option == "Number of New Cases") {
         ylim(c(NA, 5000))
-      } else if (input$filter == "Number of Contagious Cases") {
+      } else if (input$option == "Number of Contagious Cases") {
         ylim(c(NA, 100000))
-      } else if (input$filter == "State Contagious Population Percentage") {
+      } else if (input$option == "State Contagious Population Percentage") {
         ylim(c(NA, 1))
       } else {
         ylim(c(NA, 15))
@@ -52,6 +56,55 @@ create_stay_home_order_visualization <- function(input, output) {
   })
 }
 
+<<<<<<< HEAD
+=======
+app_server <- function(input, output) {
+  create_stay_home_order_visualization(input, output)
+  # create_stay_home_order_visualization_description(input, output)
+}
+
+app_server <- function(input, output) {
+
+  #********stay home order*************
+    output$stay_home_order_analysis_visual <- renderPlot({
+      stay_home_order_plot_df <- stay_home_order_analysis_df %>%
+        select(State, 
+               input$filter, 
+               Date) %>%
+        pivot_longer(input$filter, 
+                     "Category") %>%
+        filter(value > 0) %>%
+        pivot_wider(id_cols = c(Date, Category), 
+                    names_from = State, 
+                    values_from = "value") %>%
+        select(Date, Category, c(input$state)) %>%
+        pivot_longer(c(input$state), 
+                     "State") 
+      
+      stay_home_order_analysis_visualization <- ggplot(stay_home_order_plot_df) +
+        geom_line(mapping = aes(x = Date,
+                                y = value,
+                                color = State)) + 
+        labs(title = paste("Date vs.", input$filter),
+             x = "Date",
+             y = input$filter) + 
+        scale_x_date(limits = c(as.Date("2020-03-19", "%Y-%m-%d"), input$max_date)) +
+        if(input$filter == "Number of New Cases") {
+          ylim(c(NA, 5000))
+        } else if (input$filter == "Number of Contagious Cases") {
+          ylim(c(NA, 100000))
+        } else if (input$filter == "State Contagious Population Percentage") {
+          ylim(c(NA, 1))
+        } else {
+          ylim(c(NA, 15))
+        }
+      
+      stay_home_order_analysis_visualization                            
+    })
+
+
+
+>>>>>>> ec04384e7f362221d2d16401418f29853237a56e
   #*******Vaccine**********
   output$vaccine_question <- renderText({
     question <- paste("Does the vaccination population affect the rate of cases? If so, how?")
