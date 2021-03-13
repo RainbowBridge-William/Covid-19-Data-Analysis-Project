@@ -7,7 +7,7 @@ library("stringr")
 
 
 source("covid_app_server.R")
-source("covid_app_ui.R")
+source("covid_app_UI.R")
 
 shinyApp(ui = app_UI, server = app_server)
 

@@ -100,9 +100,9 @@ total_deaths_by_date_df <- jhu_deaths_time_series_df %>%
   summarize(total_deaths = sum(total_deaths))
 
 
-jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>% 
-  left_join(total_deaths_by_date_df, by = "date") %>% 
-  summary() 
+jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>%
+  left_join(total_deaths_by_date_df, by = "date") %>%
+  summary()
 
 jhu_cases_deaths_time_series_summary_df <- total_cases_by_date_df %>%
   left_join(total_deaths_by_date_df, by = "date") %>%
@@ -283,9 +283,9 @@ mask_use_never_map <- ggplot(data = mask_use_map_data_df, mapping = aes(fill = N
 
 
 # ***** CDC Vaccination by State data set *****
-vaccination_by_state_raw_df <- read.csv("data/COVID-19 Vaccinations in the US/us_state_vaccinations.csv") %>% 
+vaccination_by_state_raw_df <- read.csv("data/COVID-19 Vaccinations in the US/us_state_vaccinations.csv") %>%
   rename("state" = "location")
-vaccination_by_state_sample_df <- vaccination_by_state_raw_df %>% 
+vaccination_by_state_sample_df <- vaccination_by_state_raw_df %>%
   select(date, state, total_vaccinations, people_vaccinated, people_vaccinated_per_hundred)
 
 # make summary of data set
@@ -299,9 +299,9 @@ vaccination_by_state_df <- vaccination_by_state_raw_df %>%
   mutate(ratio_people_vaccinated = people_vaccinated_per_hundred /100)
 
 # filter for most recent dataset
-vaccination_by_state_most_recent_df <- vaccination_by_state_df %>% 
+vaccination_by_state_most_recent_df <- vaccination_by_state_df %>%
   filter(date == max(date))
-  
+
 # calculate sum/mean/min/max
 sum_vaccination <- sum(vaccination_by_state_most_recent_df$people_vaccinated, na.rm = T)
 mean_vaccination_per_100 <- round(mean(vaccination_by_state_most_recent_df$people_vaccinated_per_hundred, na.rm = T))
@@ -353,139 +353,139 @@ top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>%
 
 
 # Stay at home orders for each state
-state_stay_at_home_order_raw_data_df <- read.csv("data/State Stay At Home Orders/state_stay_at_home_order_data.csv", 
+state_stay_at_home_order_raw_data_df <- read.csv("data/State Stay At Home Orders/State_stay_at_home_order_data.csv",
                                                  stringsAsFactors = FALSE)
 
-state_stay_at_home_order_data_df <- state_stay_at_home_order_raw_data_df 
+state_stay_at_home_order_data_df <- state_stay_at_home_order_raw_data_df
 stay_at_home_order_data_sample_df <- state_stay_at_home_order_raw_data_df[1:10, ] %>%
-  select(State, 
-         Order.date, 
+  select(State,
+         Order.date,
          Infection.rate.and.confidence.interval..before.order.,
          Infection.rate.and.confidence.interval..after.order.)
 
 state_stay_at_home_order_data_df <- state_stay_at_home_order_data_df %>%
-  mutate(infection.rate.before.order = 
-           as.numeric(sub("\\ .*", "", 
+  mutate(infection.rate.before.order =
+           as.numeric(sub("\\ .*", "",
                          Infection.rate.and.confidence.interval..before.order.)),
-         infection.rate.after.order = 
-           as.numeric(sub("\\ .*", "", 
+         infection.rate.after.order =
+           as.numeric(sub("\\ .*", "",
                          Infection.rate.and.confidence.interval..after.order.)),
-         infection.rate.change = 
+         infection.rate.change =
            infection.rate.before.order - infection.rate.after.order,
-         Order.date = 
+         Order.date =
            as.Date(Order.date, format = "%m/%d/%y")) %>%
-  select(State, 
-         Order.date, 
+  select(State,
+         Order.date,
          Number.of.days.before.order,
          Number.of.days.after.order,
          infection.rate.before.order,
          infection.rate.after.order,
-         infection.rate.change) 
+         infection.rate.change)
 
 state_stay_at_home_order_summary_df <- state_stay_at_home_order_data_df %>%
   select(-State) %>%
   summary()
 
-date_range <- 
+date_range <-
   range(state_stay_at_home_order_data_df$Order.date)
-average.infection.rate.before.order <- 
+average.infection.rate.before.order <-
   mean(state_stay_at_home_order_data_df$infection.rate.before.order)
-average.infection.rate.after.order <- 
+average.infection.rate.after.order <-
   mean(state_stay_at_home_order_data_df$infection.rate.after.order)
-average.infection.rate.change <- 
+average.infection.rate.change <-
   mean(state_stay_at_home_order_data_df$infection.rate.change)
-min.infection.rate.change <- 
+min.infection.rate.change <-
   min(state_stay_at_home_order_data_df$infection.rate.change)
 max.infection.range <-
   max(state_stay_at_home_order_data_df$infection.rate.change)
-num_orders <- 
+num_orders <-
   length(state_stay_at_home_order_data_df$State)
 
 stay_at_home_order_map_df <- map_data("state")
 stay_at_home_order_map_df$region <- str_to_title(stay_at_home_order_map_df$region)
-stay_at_home_order_map_df <- stay_at_home_order_map_df %>% 
-  left_join(state_stay_at_home_order_data_df, by = c("region" = "State")) %>% 
+stay_at_home_order_map_df <- stay_at_home_order_map_df %>%
+  left_join(state_stay_at_home_order_data_df, by = c("region" = "State")) %>%
   rename("Before Order" = infection.rate.before.order,
          "After Order" = infection.rate.after.order) %>%
-  pivot_longer(c("Before Order", "After Order"), 
+  pivot_longer(c("Before Order", "After Order"),
                  "When_Recorded") %>%
   mutate(When_Recorded = factor(When_Recorded, levels = c("Before Order", "After Order")))
-            
-map_infection_rate_decrease_per_state_plot <- ggplot(data = stay_at_home_order_map_df, 
+
+map_infection_rate_decrease_per_state_plot <- ggplot(data = stay_at_home_order_map_df,
                                                      mapping = aes(fill = value)) +
   geom_polygon(mapping = aes(x = long, y = lat, group = group)) +
-  scale_fill_distiller(name = "Infection Rate \n(Grey = No Data)", 
+  scale_fill_distiller(name = "Infection Rate \n(Grey = No Data)",
                        palette = "RdYlGn",
                        na.value = "grey",
                        direction = -1) +
   coord_map() +
-  theme_void() + 
+  theme_void() +
   facet_wrap(~When_Recorded) +
   labs(title = "Infection Rate Before and After Stay At Home Order")
 
 top_5_infection_rate_decrease_states_df <- state_stay_at_home_order_data_df %>%
-  select(State, infection.rate.before.order, 
-         infection.rate.after.order, 
+  select(State, infection.rate.before.order,
+         infection.rate.after.order,
          infection.rate.change) %>%
   arrange(infection.rate.change) %>%
   top_n(5) %>%
-  rename("Before Order" = "infection.rate.before.order", 
+  rename("Before Order" = "infection.rate.before.order",
          "After Order" = "infection.rate.after.order")
 
 top_5_state_list <- c(top_5_infection_rate_decrease_states_df$State)
 
 top_5_infection_rate_decrease_states_df <- top_5_infection_rate_decrease_states_df %>%
-  pivot_longer("Before Order":"After Order", 
-               "when_recorded") 
+  pivot_longer("Before Order":"After Order",
+               "when_recorded")
 
 top_5_infection_rate_decrease_states_df <- top_5_infection_rate_decrease_states_df %>%
-  mutate(State = factor(State, levels = top_5_state_list), 
-         when_recorded = factor(when_recorded, levels = c("Before Order", 
+  mutate(State = factor(State, levels = top_5_state_list),
+         when_recorded = factor(when_recorded, levels = c("Before Order",
                                                           "Difference",
                                                           "After Order")))
 
-top_5_infection_rate_decrease_states_plot <- ggplot(data = top_5_infection_rate_decrease_states_df) + 
-  geom_col(mapping = aes(x = State, 
+top_5_infection_rate_decrease_states_plot <- ggplot(data = top_5_infection_rate_decrease_states_df) +
+  geom_col(mapping = aes(x = State,
                          y = value,
-                         fill = when_recorded), 
-           position = "dodge") + 
-  labs(title = "Top 5 State Infection Rate Decreases After Stay At Home Order", 
+                         fill = when_recorded),
+           position = "dodge") +
+  labs(title = "Top 5 State Infection Rate Decreases After Stay At Home Order",
        y = "Infection Rate") +
   theme(legend.title = element_blank())
 
 infection_rate_decrease_distribution_df <- state_stay_at_home_order_data_df %>%
   select(infection.rate.before.order, infection.rate.after.order, infection.rate.change) %>%
-  rename("Before Order" = infection.rate.before.order, 
+  rename("Before Order" = infection.rate.before.order,
          "After Order" = infection.rate.after.order,
          "Difference"  = infection.rate.change) %>%
   pivot_longer(c("Before Order", "After Order", "Difference"), "Infection_Rate") %>%
-  mutate(Infection_Rate = factor(Infection_Rate, levels = c("Before Order", 
-                                                            "After Order", 
+  mutate(Infection_Rate = factor(Infection_Rate, levels = c("Before Order",
+                                                            "After Order",
                                                             "Difference")))
-  
-infection_rate_distribution_plot <- 
-  ggplot(data = infection_rate_decrease_distribution_df) + 
-  geom_boxplot(mapping = aes(x = value, y = Infection_Rate)) + 
-  labs(title = "Distribution of Pre and Post Order Infection Rates and Difference", 
-       y = "Rate Source", 
-       x = "Infection Rate") 
 
-infection.rate.before.order.outliers <- 
-  c(arrange(state_stay_at_home_order_data_df, 
+infection_rate_distribution_plot <-
+  ggplot(data = infection_rate_decrease_distribution_df) +
+  geom_boxplot(mapping = aes(x = value, y = Infection_Rate)) +
+  labs(title = "Distribution of Pre and Post Order Infection Rates and Difference",
+       y = "Rate Source",
+       x = "Infection Rate")
+
+infection.rate.before.order.outliers <-
+  c(arrange(state_stay_at_home_order_data_df,
             infection.rate.before.order))[["infection.rate.before.order"]][1:3]
-infection.rate.before.order.outlier.states <- 
+infection.rate.before.order.outlier.states <-
   c(state_stay_at_home_order_data_df[["State"]][1:3])
-infection.rate.change.outliers <- 
+infection.rate.change.outliers <-
   c(arrange(state_stay_at_home_order_data_df, infection.rate.change))[["infection.rate.change"]][1]
-infection.rate.change.outlier.states <- 
+infection.rate.change.outlier.states <-
   c(arrange(state_stay_at_home_order_data_df, infection.rate.change))[["State"]][1]
-           
-  
 
 
 
 
-           
 
-  
+
+
+
+
 
