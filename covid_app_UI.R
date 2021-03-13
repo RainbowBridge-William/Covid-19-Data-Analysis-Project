@@ -221,13 +221,7 @@ mask_data_panel <- tabPanel(
    )
 )
 
-<<<<<<< HEAD
 #*************************Stay Home Order****************************************************
-#*
-=======
-#**********************************************
-
->>>>>>> 9f7b06971c9349ee9a93507968b432e8716645b7
 stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
                                            label = h5("Days Since Order: "),
                                            value = 30,

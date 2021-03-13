@@ -354,8 +354,7 @@ top_5_percent_vaccination_plot <- top_5_percent_vaccination_df %>%
 
 # Stay at home orders for each state
 state_stay_at_home_order_raw_data_df <- read.csv("data/State Stay At Home Orders/state_stay_at_home_order_data.csv", 
-                                                 stringsAsFactors = FALSE) %>% 
-  rename("State" = "ï..State")
+                                                 stringsAsFactors = FALSE)
 
 state_stay_at_home_order_data_df <- state_stay_at_home_order_raw_data_df 
 stay_at_home_order_data_sample_df <- state_stay_at_home_order_raw_data_df[1:10, ] %>%
