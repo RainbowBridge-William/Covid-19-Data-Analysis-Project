@@ -177,40 +177,52 @@ time_vs_infection_rate_change_plot <- ggplot(data = time_vs_infection_rate_chang
        y = "State Average Daily Infection Rate Decrease") +
   scale_x_continuous(labels = scales::label_number())
 
+state_stay_at_home_order_data_df <- state_stay_at_home_order_data_df %>%
+  mutate(State = str_to_title(State))
+
+population_state_df <- population_state_df %>%
+  mutate(State = str_to_title(State))
+
 stay_home_order_analysis_df <- jhu_cases_time_series_df %>%
   select(-Province_State) %>%
   mutate(State = str_to_title(state_territory)) %>%
   left_join(state_stay_at_home_order_data_df, by = "State") %>%
+  left_join(population_state_df, by = "State") %>%
   filter(!(is.na(Order.date))) %>%
-  select(date, Order.date, State, total_cases) %>%
-  filter(date >= Order.date - 2) %>%
-  filter(date <= Order.date + 90) %>%
-  arrange(State) %>%
-  mutate(num_days_since_order = as.numeric(date - Order.date, units = "days"),
-         num_new_cases = total_cases - lag(total_cases),
-         change_in_num_new_cases = num_new_cases - lag(num_new_cases))
-
-get_initial_new_cases <- stay_home_order_analysis_df %>%
-  filter(num_days_since_order == 0) %>%
-  select(State, num_new_cases) %>%
-  rename(initial_new_cases = num_new_cases)
-
-stay_home_order_analysis_df <- stay_home_order_analysis_df %>%
-  left_join(get_initial_new_cases, by = "State") %>%
-  mutate(initial_vs_current_new_case_difference = num_new_cases - initial_new_cases) %>%
-  filter(num_days_since_order >= 0)
+  filter(total_cases > 0) %>%
+  arrange(State, date) %>%
+  select(State,
+         Pop,
+         date,
+         Order.date,
+         total_cases) %>%
+  mutate(num_days_since_order = as.numeric(date - Order.date, unit = "days"),
+         new_cases = total_cases - lag(total_cases),
+         contagious_cases = lag(total_cases) - lag(new_cases, 10), 
+         percent_change_contagious_cases = (new_cases / contagious_cases) * 100,
+         percent_population_contagious = (contagious_cases / Pop) * 100, 
+         ) %>%
+  filter(num_days_since_order >= 0) %>%
+  select(State,
+         date,
+         new_cases,
+         contagious_cases,
+         percent_change_contagious_cases,
+         percent_population_contagious)
 
 country_average_df <- stay_home_order_analysis_df %>%
-  group_by(num_days_since_order) %>%
+  group_by(date) %>%
   summarise(across(-State, mean)) %>% 
   mutate(State = "Country Average")
 
 stay_home_order_analysis_df <- stay_home_order_analysis_df %>%
   merge(country_average_df, all = TRUE) %>%
   arrange(State) %>% 
-  rename("New Daily Cases" = num_new_cases, 
-         "Daily Change In Number of New Cases" = change_in_num_new_cases,
-         "Cumulative Difference Between Initial and Current Daily Change" = initial_vs_current_new_case_difference) %>%
-  select(-c(Order.date, date, initial_new_cases, total_cases)) %>%
-  gather(key = "Category", value = "Values", -c(State, num_days_since_order)) %>%
-  spread(key = State, value = Values)
+  rename("Number of New Cases" = new_cases,
+         "Number of Contagious Cases" = contagious_cases, 
+         "State Contagious Population Percentage" = percent_population_contagious,
+         "Percent Change In Contagious Cases" = percent_change_contagious_cases, 
+         "Date" = date) 
+
+  
+

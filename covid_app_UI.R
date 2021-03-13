@@ -2,14 +2,13 @@ library("knitr")
 library("dplyr")
 library("tidyverse")
 library("ggplot2")
-library("plotly")
 library("maps")
 library("stringr")
 library("shiny")
 library("shinythemes")
-library("usa")
 
 source("section_2.R")
+source("section_3.R")
 
 domain_description <-
   "COVID-19, which is short for coronavirus disease
@@ -113,83 +112,25 @@ introduction_panel <- tabPanel(("Background"),
                                p(stay_home_order_data_description)
                                )
 
-united_states_possessions <- states %>%
-   merge(territory, all = TRUE)
-
-hospital_data_panel <- tabPanel(
-   "Hospital Data",
-   sidebarLayout(
-
-      sidebarPanel(
-         selectizeInput(
-            "hospitalsTypeSelectize",
-            "Facility Types",
-            c(
-               "Non-trauma" = "non_trauma",
-               "Level I" = "level_i",
-               "Level II" = "level_ii",
-               "Level III" = "level_iii",
-               "Level IV" = "level_iv",
-               "Level V" = "level_v"
-            )
-         ),
-         selectizeInput(
-            "hospitalsStateSelectize",
-            "State/Territory",
-            setNames(united_states_possessions$abb, united_states_possessions$name),
-            multiple = TRUE,
-            options = list(
-               "allowEmptyOption" = TRUE,
-               "showEmptyOptionInDropdown" = TRUE,
-               "emptyOptionLabel" = "All U.S. Possessions",
-               "placeholder" = "All U.S. Possessions"
-            )
-         )
-      ),
-
-      mainPanel(
-         plotlyOutput("hospitalsVisualization")
-      )
-
-   )
-)
+hospital_data_panel <- tabPanel("Hospital Data")
 
 vaccination_data_panel <- tabPanel("Vaccination Data")
 
-mask_survey_answers <- c(
-   "Never" = "NEVER",
-   "Rarely" = "RARELY",
-   "Sometimes" = "SOMETIMES",
-   "Frequently" = "FREQUENTLY",
-   "Always" = "ALWAYS"
-)
+mask_data_panel <- tabPanel("Mask Use Data")
 
-mask_data_panel <- tabPanel(
-   "Mask Use Data",
-   h2("How is self-reported mask-wearing related to the number of cases for each county in the United States?"),
-   sidebarLayout(
-      sidebarPanel(
-         selectInput("survey_answer", "Survey answer", mask_survey_answers),
-         checkboxInput("use_log_scale", "Use log scale", FALSE)
-      ),
-      mainPanel(
-         plotOutput("mask_use_plot")
-      )
-   )
-)
-
-<<<<<<< HEAD
-stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
-                                              label = h5("Days Since Order: "),
-                                              value = 30, 
-                                              min = 0, 
-                                              max = 90)
+stay_home_order_time_slider <- sliderInput(inputId = "max_date",
+                                           label = h5("Date Range: "),
+                                           min = min(state_stay_at_home_order_data_df$Order.date), 
+                                           max = max(state_stay_at_home_order_data_df$Order.date) + 90,
+                                           value = min(state_stay_at_home_order_data_df$Order.date) + 30
+                                           )
 
 stay_home_order_filter_buttons <- radioButtons(inputId = "filter", 
-                                                  label = h5("Time vs.: "),
-                                                  choices = c("New Daily Cases",
-                                                              "Daily Change In Number of New Cases",
-                                                              "Cumulative Difference Between Initial and Current Daily Change"
+                                                  label = h5("Time vs. : "),
+                                                  choices = c("Number of New Cases", 
+                                                              "Number of Contagious Cases",
+                                                              "State Contagious Population Percentage",
+                                                              "Percent Change In Contagious Cases"
                                                               )
                                                   )
 
@@ -201,13 +142,12 @@ stay_home_order_state_selector_choice_list <- as.list(append("Country Average",
 
 stay_home_order_state_selector <- 
   selectizeInput(inputId = "state", 
-                 label = h5("State:"),
+                 label = h5("Search States or Country Average (5 Max):"),
                  choices = stay_home_order_state_selector_choice_list,
                  options = list(
                    highlight = FALSE,
                    minItems = 1,
-                   maxItems = 10,
-                   placeholder = NULL),
+                   maxItems = 5),
                  selected = "Country Average",
                  multiple = TRUE
                  )
@@ -216,38 +156,6 @@ stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
                                           stay_home_order_time_slider,
                                           stay_home_order_filter_buttons,
                                           stay_home_order_state_selector
-=======
-year_slider_control <- sliderInput(inputId = "days_after_order",
-                                   label = h5("Days After Order: "),
-                                   value = 30,
-                                   min = 1,
-                                   max = 90)
-
-button_filter_control <- radioButtons(inputId = "filter",
-                                      label = "Filter",
-                                      choices = c("Decrease In Cases After Order",
-                                                  "Daily Cases After Order")
-                                      )
-
-menu_control <- selectizeInput(inputId = "state",
-                            label = h5("State:"),
-                            list(choices = append("Country Average",
-                                                  state_stay_at_home_order_data_df$State,
-                                                  0)
-                                 ),
-                            options = list(
-                              highlight = FALSE,
-                              maxOptions = 3,
-                              placeholder = "Search for state and/or country average"),
-                            selected = "Country Average",
-                            multiple = TRUE
-                            )
-
-home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
-                                          year_slider_control,
-                                          button_filter_control,
-                                          menu_control
->>>>>>> 1ef5d6625af8e272155afdfdffa5677ce212a4dd
                                           )
 
 stay_home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"),
@@ -263,7 +171,6 @@ stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                             )
                                           )
 
-<<<<<<< HEAD
 app_UI <- fluidPage(theme = shinytheme("slate"), 
                     titlePanel(h1("Covid-19 Data")), 
                     navbarPage(title = strong("Menu"), 
@@ -272,14 +179,4 @@ app_UI <- fluidPage(theme = shinytheme("slate"),
                                vaccination_data_panel, 
                                mask_data_panel, 
                                stay_home_order_data_panel)
-=======
-app_UI <- fluidPage(theme = shinytheme("slate"),
-                    titlePanel("COVID-19 Data"),
-                    navbarPage(title = strong("Menu"),
-                               introduction_panel,
-                               hospital_data_panel,
-                               vaccination_data_panel,
-                               mask_data_panel,
-                               stay_at_home_order_data_panel)
->>>>>>> 1ef5d6625af8e272155afdfdffa5677ce212a4dd
                     )
