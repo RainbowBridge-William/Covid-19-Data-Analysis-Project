@@ -7,8 +7,13 @@ library("stringr")
 library("plotly")
 
 source("section_3.R")
-source("section_3.R")
 
+
+app_server <- function(input, output) {
+  create_stay_home_order_visualization(input, output)
+  # create_stay_home_order_visualization_description(input, output)
+
+#********stay home order*************
 create_stay_home_order_visualization <- function(input, output) {
   output$stay_home_order_analysis_visual <- renderPlot({
     stay_home_order_plot_df <- stay_home_order_analysis_df %>%
@@ -42,43 +47,10 @@ create_stay_home_order_visualization <- function(input, output) {
       } else {
         ylim(c(NA, 15))
       }
-    
+      
     stay_home_order_analysis_visualization                            
   })
 }
-
-app_server <- function(input, output) {
-  create_stay_home_order_visualization(input, output)
-  # create_stay_home_order_visualization_description(input, output)
-}
-
-app_server <- function(input, output) {
-
-  #********stay home order*************
-  create_stay_home_order_visualization <- function(input, output) {
-    output$stay_home_order_analysis_visual <- renderPlot({
-      stay_home_order_plot_df <- stay_home_order_analysis_df %>%
-        filter(num_days_since_order <= input$num_days_since_order) %>%
-        filter(Category == input$filter) %>%
-        select(num_days_since_order,
-               Category,
-               input$state) %>%
-        pivot_longer(!c(Category, num_days_since_order),
-                     names_to = "State",
-                     values_to = "Data")
-
-      stay_home_order_analysis_visualization <- ggplot(stay_home_order_plot_df) +
-        geom_line(mapping = aes(x = num_days_since_order,
-                                y = Data,
-                                color = State)) +
-        labs(title = "",
-             x = "Number Of Days After Stay Home Order Start",
-             y = input$filter)
-
-      stay_home_order_analysis_visualization
-    })
-  }
-
 
   #*******Vaccine**********
   output$vaccine_question <- renderText({
@@ -217,6 +189,5 @@ app_server <- function(input, output) {
                   "\" wearing a mask, the top 50% of counties had an average of ",
                   round(top_50_percent_mean), " COVID cases, and the bottom 50% had an average of ",
                   round(bottom_50_percent_mean), " cases."))
-  })
-
-}
+    })
+  }

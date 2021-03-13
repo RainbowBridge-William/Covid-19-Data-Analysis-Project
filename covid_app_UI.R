@@ -7,7 +7,6 @@ library("stringr")
 library("shiny")
 library("shinythemes")
 
-source("section_2.R")
 source("section_3.R")
 
 domain_description <-
@@ -229,7 +228,8 @@ mask_data_panel <- tabPanel(
    )
 )
 
-
+#*************************Stay Home Order****************************************************
+#*
 stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
                                               label = h5("Days Since Order: "),
                                               value = 30,
@@ -265,7 +265,6 @@ stay_home_order_state_selector <-
 stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
                                           stay_home_order_time_slider,
                                           stay_home_order_filter_buttons,
-                                          stay_home_order_state_selector,
                                           stay_home_order_state_selector)
 
 year_slider_control <- sliderInput(inputId = "days_after_order",
@@ -284,8 +283,7 @@ menu_control <- selectizeInput(inputId = "state",
                             label = h5("State:"),
                             list(choices = append("Country Average",
                                                   state_stay_at_home_order_data_df$State,
-                                                  0)
-                                 ),
+                                                  0)),
                             options = list(
                               highlight = FALSE,
                               maxOptions = 3,
@@ -322,6 +320,8 @@ app_UI <- fluidPage(theme = shinytheme("slate"),
                                mask_data_panel, 
                                stay_home_order_data_panel)
                     )
+
+#********************************************************************
 
 app_UI <- fluidPage(theme = shinytheme("slate"),
                     titlePanel("COVID-19 Data Analysis"),
