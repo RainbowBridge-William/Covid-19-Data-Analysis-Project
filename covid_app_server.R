@@ -6,10 +6,9 @@ library("maps")
 library("stringr")
 library("plotly")
 
-
+source("section_3.R")
 source("section_3.R")
 
-<<<<<<< HEAD
 create_stay_home_order_visualization <- function(input, output) {
   output$stay_home_order_analysis_visual <- renderPlot({
     stay_home_order_plot_df <- stay_home_order_analysis_df %>%
@@ -52,7 +51,6 @@ app_server <- function(input, output) {
   create_stay_home_order_visualization(input, output)
   # create_stay_home_order_visualization_description(input, output)
 }
-=======
 
 app_server <- function(input, output) {
 
@@ -222,5 +220,3 @@ app_server <- function(input, output) {
   })
 
 }
-
->>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
