@@ -296,9 +296,16 @@ home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
 
 stay_home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"),
                                             hr(),
-                                            plotOutput("stay_home_order_analysis_visual")
-                                            #p(textOutput("stay_home_order_analysis_plot_description"))
-)
+                                            plotOutput("stay_home_order_analysis_visual"),
+                                            hr(),
+                                            hr(),
+                                            p("After observing this vizualization of how different Covid-19 statistics change
+                                               over the 90 days following stay at home orders going into effect, in each state, 
+                                              we can conclude that while they do little to reverse the spread of Covid-19, they 
+                                              do help slow the spread."),
+                                            hr(),
+                                            p((textOuput("stay_home_order_analysis_text")))
+                                            )
 
 stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                        sidebarLayout(

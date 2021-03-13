@@ -226,6 +226,8 @@ stay_home_order_analysis_df <- stay_home_order_analysis_df %>%
          "State Contagious Population Percentage" = percent_population_contagious,
          "Date" = date) 
 
+
+
   
 
 
