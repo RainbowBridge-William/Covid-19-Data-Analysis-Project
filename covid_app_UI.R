@@ -7,7 +7,10 @@ library("stringr")
 library("shiny")
 library("shinythemes")
 
+<<<<<<< HEAD
 source("section_2.R")
+=======
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
 source("section_3.R")
 
 domain_description <-
@@ -89,6 +92,7 @@ introduction_panel <- tabPanel(("Background"),
                                h4(" - Jeffrey Kaufman"),
                                h4(" - Kyler Smith"),
                                h4(" - William Wang"),
+                               a("Data Report", href = "https://info201b-wi21.github.io/project-group-a6/"),
                                h3(strong("Problem Domain")),
                                hr(),
                                p(domain_description),
@@ -112,12 +116,83 @@ introduction_panel <- tabPanel(("Background"),
                                p(stay_home_order_data_description)
                                )
 
+<<<<<<< HEAD
 hospital_data_panel <- tabPanel("Hospital Data")
+=======
+united_states_possessions <- usa::states %>%
+   merge(territory, all = TRUE)
 
-vaccination_data_panel <- tabPanel("Vaccination Data")
+#   ***** Hospitals *****
+hospital_data_panel <- tabPanel(
+   "Hospital Data",
+   sidebarLayout(
+
+      sidebarPanel(
+         selectizeInput(
+            "hospitalsTypeSelectize",
+            "Facility Type",
+            c(
+               "Non-trauma" = "non_trauma",
+               "Level I" = "level_i",
+               "Level II" = "level_ii",
+               "Level III" = "level_iii",
+               "Level IV" = "level_iv",
+               "Level V" = "level_v"
+            )
+         ),
+         selectizeInput(
+            "hospitalsStateSelectize",
+            "State/Territory",
+            setNames(united_states_possessions$abb, united_states_possessions$name),
+            multiple = TRUE,
+            options = list(
+               "allowEmptyOption" = TRUE,
+               "showEmptyOptionInDropdown" = TRUE,
+               "emptyOptionLabel" = "All U.S. Possessions",
+               "placeholder" = "All U.S. Possessions"
+            )
+         )
+      ),
+
+      mainPanel(
+         plotlyOutput("hospitalsVisualization"),
+         br(),
+         textOutput("hospitalsText")
+      )
+
+   )
+)
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
+
+#****************** Vaccination Panel********************
+vaccination_controls_panel <- sidebarPanel(
+   #select box for selecting states
+   selectInput("vaccine_state_select", label = h4("Select which state to visualize data for:"),
+               choices = list("Overall (Entire US)" = "the Entire US", states = states),
+               selected = "the Entire US"),
+   h4("**Hover on the dots to see more information**")
+)
+
+vaccination_analysis_panel <- mainPanel(
+   h2(textOutput("vaccine_question")),
+   plotlyOutput("vaccination_plot"),
+   br(),
+   p(textOutput("vaccination_description"))
+   )
+
+
+vaccination_data_panel <- tabPanel("Vaccination Data",
+                                   sidebarLayout(
+                                      vaccination_controls_panel,
+                                      vaccination_analysis_panel
+                                   ))
+
+
+#*********************************************************
 
 mask_data_panel <- tabPanel("Mask Use Data")
 
+<<<<<<< HEAD
 stay_home_order_time_slider <- sliderInput(inputId = "max_date",
                                            label = h5("Date Range: "),
                                            min = min(state_stay_at_home_order_data_df$Order.date), 
@@ -131,18 +206,67 @@ stay_home_order_filter_buttons <- radioButtons(inputId = "filter",
                                                               "Number of Contagious Cases",
                                                               "State Contagious Population Percentage",
                                                               "Percent Change In Contagious Cases"
+=======
+mask_data_panel <- tabPanel(
+   "Mask Use Data",
+   h2("How is self-reported mask-wearing related to the number of cases for each
+      county in the United States?"),
+   p("Given a survey asking \"How often do you wear a mask in public when you
+     expect to be within six feet of another person?\", with 5 different levels
+     of responses, is there any correlation between counties that have more COVID
+     cases and counties with people who answer in a particular way?"),
+   p("The survey was done in 2020 from July 2 to July 14, and the number of
+     COVID cases in each county was recorded on July 14, 2020."),
+   sidebarLayout(
+      sidebarPanel(
+         selectInput("survey_answer", "Survey answer", mask_survey_answers),
+         checkboxInput("use_log_scale", "Use log scale", FALSE)
+      ),
+      mainPanel(
+         plotOutput("mask_use_plot"),
+         br(),
+         textOutput("mask_use_text"),
+         br(),
+         p("Counties with more people who report that they wear a mask in
+           public, also have more COVID cases. This unexpected, because masks
+           are supposed to slow the spread of COVID. Instead, this is probably
+           the result of people wearing a mask", em("because"), "their county
+           has a large number of cases.")
+      )
+   )
+)
+
+
+stay_home_order_time_slider <- sliderInput(inputId = "num_days_since_order",
+                                              label = h5("Days Since Order: "),
+                                              value = 30,
+                                              min = 0,
+                                              max = 90)
+
+stay_home_order_filter_buttons <- radioButtons(inputId = "filter",
+                                                  label = h5("Time vs.: "),
+                                                  choices = c("New Daily Cases",
+                                                              "Daily Change In Number of New Cases",
+                                                              "Cumulative Difference Between Initial and Current Daily Change"
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
                                                               )
                                                   )
 
-stay_home_order_state_selector_choice_list <- as.list(append("Country Average", 
-                                                               state_stay_at_home_order_data_df$State, 
+stay_home_order_state_selector_choice_list <- as.list(append("Country Average",
+                                                               state_stay_at_home_order_data_df$State,
                                                                0
                                                                )
                                                       )
 
+<<<<<<< HEAD
 stay_home_order_state_selector <- 
   selectizeInput(inputId = "state", 
                  label = h5("Search States or Country Average (5 Max):"),
+=======
+stay_home_order_state_selector <-
+  selectizeInput(inputId = "state",
+                 label = h5("State:"),
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
                  choices = stay_home_order_state_selector_choice_list,
                  options = list(
                    highlight = FALSE,
@@ -155,7 +279,42 @@ stay_home_order_state_selector <-
 stay_home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
                                           stay_home_order_time_slider,
                                           stay_home_order_filter_buttons,
+<<<<<<< HEAD
                                           stay_home_order_state_selector
+=======
+                                          stay_home_order_state_selector)
+
+year_slider_control <- sliderInput(inputId = "days_after_order",
+                                   label = h5("Days After Order: "),
+                                   value = 30,
+                                   min = 1,
+                                   max = 90)
+
+button_filter_control <- radioButtons(inputId = "filter",
+                                      label = "Filter",
+                                      choices = c("Decrease In Cases After Order",
+                                                  "Daily Cases After Order")
+                                      )
+
+menu_control <- selectizeInput(inputId = "state",
+                            label = h5("State:"),
+                            list(choices = append("Country Average",
+                                                  state_stay_at_home_order_data_df$State,
+                                                  0)
+                                 ),
+                            options = list(
+                              highlight = FALSE,
+                              maxOptions = 3,
+                              placeholder = "Search for state and/or country average"),
+                            selected = "Country Average",
+                            multiple = TRUE
+                            )
+
+home_order_controls_panel <- sidebarPanel(h4(strong("Filters:")),
+                                          year_slider_control,
+                                          button_filter_control,
+                                          menu_control
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
                                           )
 
 stay_home_order_analysis_panel <- mainPanel(h2("How Well Do Stay-At-Home Orders Work?"),
@@ -171,6 +330,7 @@ stay_home_order_data_panel <- tabPanel("Stay At Home Order Data",
                                             )
                                           )
 
+<<<<<<< HEAD
 app_UI <- fluidPage(theme = shinytheme("slate"), 
                     titlePanel(h1("Covid-19 Data")), 
                     navbarPage(title = strong("Menu"), 
@@ -180,3 +340,15 @@ app_UI <- fluidPage(theme = shinytheme("slate"),
                                mask_data_panel, 
                                stay_home_order_data_panel)
                     )
+=======
+
+app_UI <- fluidPage(theme = shinytheme("slate"),
+                    titlePanel("COVID-19 Data Analysis"),
+                    navbarPage(title = strong("Menu"),
+                               introduction_panel,
+                               hospital_data_panel,
+                               vaccination_data_panel,
+                               mask_data_panel,
+                               stay_home_order_data_panel)
+                     )
+>>>>>>> 1188b4d435847a39750adf894a3ae87237732e4f
