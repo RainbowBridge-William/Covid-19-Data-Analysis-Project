@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("section_2.R")
+source("section_3.R") # Section 3 contains `source("section_2.R")`
 library("knitr")
 ```
 
@@ -17,10 +17,6 @@ COVID-19, which is short for coronavirus disease of 2019, is the illness caused 
 Thus, analyzing data related to COVID-19 is worthwhile since it will help people understand the overall situation and severity of the pandemic and arouse their interest in adopting protective measures like mask-wearing, social-distancing, and vaccination. In addition, analyzing this data may expose differences in the ability of different regulations between states to contain the virus, which may prove beneficial in helping state governments are only utilizing restrictions that truly work to contain this pathogen.
 
 ## Section 2. Data Description
-```{r section_2, include = FALSE}
-source("section_2.R")
-source("section_3.R")
-```
 
 #### JHU CSSE COVID-19 Data
 
@@ -81,13 +77,29 @@ The [COVID-19 Vaccinations in the United States data set](https://covid.cdc.gov/
 kable(head(vaccination_by_state_sample_df))
 ```
 
-- `Total doses administered` column is the total number of vaccine doses that have been given to people.
+- `total_vaccinations` column is the total number of vaccine doses that have been given to people.
 
-- `Doses administered per 100k` column is the total number of vaccine doses given for every 100,000 people.
+- `people_vaccinated` column is the  total number of people who received at least one vaccine dose.
 
-- `18+ Doses Administered` column is the total number of vaccine doses that have been given to people for the overall population
+- `people_vaccinated_per_hundred` column is the total number of people who received at least one vaccine dose per 100 people.
 
-- `18+ Doses administered per 100k` column is the total number of vaccine doses given for every 100,000 people aged 18 years and older.
+
+---
+
+#### Stay At Home Order Effectiveness For Each State
+The [Infection rates before and after stay at home orders went into effect set](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7246016/table/tbl0001/?report=objectonly) contains a list of each state and the date on which the first stay at home order was put into effect. It also has infection rates for days before and after the enstatement of these orders. Infection rates were calculated using daily COVID-19 daily cases collected by Johns Hopkins Center for Health Security. 
+
+```{r stay_at_home_order_data_sample_df}
+kable(head(stay_at_home_order_data_sample_df))
+```
+
+- `State` column is the state abbreviation for each state where data was available in the U.S.
+
+- `Order.date` column is the date on which the first stay at home order was put into effect.
+
+- `Infection.rate.and.confidence.interval.before.order` column is the infection rate and confidence interval for this rate for the day before the order went into effect
+
+- `Infection.rate.and.confidence.interval.after.order` column is the infection rate and confidence interval of this rate for the day after the order went into effect.
 
 ---
 
@@ -165,7 +177,7 @@ There doesn't seem to be any significant outliers. This is probably because ther
 ---
 
 #### **CDC COVID-19 Vaccinations in the United States**
-By Feb 22th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100k` per 100,000 (`r mean_ratio_per_100k * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100k` to `r max_vaccination_per_100k`.
+By March 10th, there are `r sum_vaccination` people in the US got vaccination. Grouped by states, there are an average of `r mean_vaccination_per_100` per 100,000 (`r mean_ratio_per_100 * 100`%) of population in the US given doses. The number of doses administered per 100,000 ranges from `r min_vaccination_per_100` to `r max_vaccination_per_100`.
 
 ```{r vaccination_by_state_summary_df_}
 kable(vaccination_by_state_summary_df)
@@ -184,6 +196,29 @@ top_5_percent_vaccination_plot
 ```
 
 The most significant outlier in the data set is the total vaccination population in California. The possible reason might be overall education level in that states is high and also the population base in CA is large so that there are a great number of people taking the vaccine.
+
+---
+
+#### **Stay At Home Order Effectiveness In Different U.S. States**
+Between 'r date_range[1]' and 'r date_range[2]' there were 'r num_orders' different states which instituted stay at home orders. The average decrease in COVID-19 infection rates due to stay at home orders was 'r average.infection.rate.change' with the maximum decrease being 'r max.infection.rate.change' and the minimum being 'r min.infection.rate.change'.
+
+```{r state_stay_at_home_order_summary_df}
+kable(state_stay_at_home_order_summary_df)
+```
+
+```{r map_infection_rate_decrease_per_state_plot}
+map_infection_rate_decrease_per_state_plot
+```
+
+```{r top_5_infection_rate_decrease_states_plot}
+top_5_infection_rate_decrease_states_plot
+```
+
+```{r infection_rate_distribution_plot}
+infection_rate_distribution_plot
+```
+
+When it came to the values of infection rates before and after stay at home orders were imposed in various states, there were a few outliers in the values for infection rates before states imposed stay at home orders as well as the difference between infection rates before and after orders were imposed. This is probably because of the inconsistency between the amount of time between the two values were taken from as well as population density in those states. The outliers for infection rates before orders were imposed occurred in `r infection.rate.before.order.outlier.states[1:3]` and the values were `r infection.rate.before.order.outliers[1:3]`. The outlier for infection rate changes occurred in `r infection.rate.change.outlier.states[1]` and the value was `r infection.rate.change.outliers[1]`.
 
 ---
 
@@ -206,14 +241,17 @@ healthcare_facility_count_death_rate_plot
 Based on the results of the analysis, it does not appear as though there is a significant relationship between the number or types of hospitals in a state or territory and the death rate from COVID-19. This is evidenced largely through the six faceted scatter plots, as in each plot, the trend line depicted clearly does not depict a significant correlation between the the facility count and death rate. Interestingly enough, contrary to my belief, three of the six trends actually depicted slight increases in the death rate with increases in the number of hospitals, specifically those that are level I, level II, or non-trauma hospitals. Level V trauma centers depicted a slight downwards trend, whereas the level III and level IV centers appearred to have no correlation at all with death rate.
 
 One of the most interesting things that this might suggest is the important of wearing a mask and practicing proper social distancing. As seen in the geographic distribution of trauma centers, lower level (levels I and II) trauma centers and non-trauma hospitals tend to be grouped near population hotspots in urban cities such as Los Angeles, Houston, Chicago, and New York, to name a few. This suggests that the death rate is more concerned with the ability of the virus to spread among individuals, which is the case in these large urban areas. This would support what public health officials have been saying the vast majority of the time, which is that it is so very critical for every, but especially those coming into contact with those outside of their household often, to wash their hands, wear a mask, and keep your distance.
+<br>
+<br>
+
 
 #### Does the percent of vaccination population in each state affect the rate of cases? If so, how?
 Rate of cases here is the ratio of new cases and total population for each state on the most recent date. Percent of vaccination population is the percentage of population that has given a vaccine.
 
-To do the data analysis, I first calculate the new cases of each state on most recent date. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
+To do the data analysis, I first calculate the new cases of each state over time. Then I calculate the rate of cases by taking the ratio of new cases and population of each state. Lastly I compare the rate of cases with percent of vaccination to find potential relationship.
 
 ```{r vaccine_vs_rate_case}
-kable(vaccine_vs_rate_case, col.names = c("State", "Most Recent Ratio of Vaccination Population", "Case Rate at Most Recent Date"))
+kable(head(vaccine_vs_rate_case), col.names = c("Date","State", "Ratio of Vaccination Population", "Case Rate"))
 ```
 
 ```{r vaccine_vs_rate_case_scatter_plot}
@@ -224,9 +262,12 @@ According to both quantitative and graphical result, it shows that there is a sl
 
 This result is unexpected to me. I was originally sure of this correlation to be strong. My assumption is as the percentage of vaccination population goes up, the cases rate goes down. The possible reasons for this unexpectency are:
 
-- Lack of data due to the fact that CDC vaccination overtime data By State is not available to public. Only vaccination data for each state at most recent data and overtime data for the entire US is available
+
 - Other than vaccination, there are many other factors influencing the case rate, such as different quarantine policy across different states, different attitude towards mask, and different population density.
 - The result of vaccination may take a longer time to reflect on the case rate since there are still relatively few people taken the vaccine and the actual implement of vaccine is less than three month.
+
+<br>
+<br>
 
 #### How is self-reported mask-wearing related to the number of cases for each county in the United States?
 
@@ -259,3 +300,22 @@ never_plot_log_scale
 Counties with more people who report that they wear a mask in public, also have more COVID cases. The top 50% of counties that have the largest percent of "Always" responses have a significantly higher mean number of cases than the bottom 50%. This is also true with a significantly lower mean for the "Never" response. Looking at the scatterplots confirms this correlation.
 
 You would expect that counties with more mask-wearers would have less COVID cases, because masks are supposed to slow the spread of COVID, but counties with more mask-wearers actually had more COVID cases. This is probably because of the split between urban and rural counties. Urban counties have a larger population, which means that they have more COVID cases, so people in those counties want to wear a mask more often. People in more rural counties probably don't wear a mask as often because they don't think they need to, because COVID is less of a problem in those counties.
+
+#### Do state stay at home orders help to mitigate the spread of COVID-19?
+
+Since the beginning of the COVID-19 pandemic, states have put stay at home orders into place in an effort to curb the spread of the virus. But do these orders really have a substantial effect on the infection rates throughout the U.S?
+
+The way in which my data was collected will make this slightly challenging. Since the values for infection rate were collected at different times before and after the start of lock-down for each state, I will need to use the ratio between the number of days after the start of each state's lock-down and the date at which the second infection rate value was collected and the number of days between the date of the first infection rate value's collection as a standardized measurement of the time spent in lock-down. Then, in order to standardize the change in infection rate from the pre-lock-down measurement to the post-lock-down measurement for different amounts of time, I will divide that value by the number of days in between measurements. In order to find a relationship between time spent in a stay at home order and the change in infection rates, I will plot the daily infection rates on the y-axis and the ratio value on the x-axis and insert a line of best fit. 
+
+```{r time_vs_infection_rate_change_df}
+kable(time_vs_infection_rate_change_df)            
+```
+
+```{r time_vs_infection_rate_change_plot}
+time_vs_infection_rate_change_plot
+```
+
+After examining the data, it is clear that at last in this set, there is a weak relationship between the length of time under a stay at home order and a decrease in COVID-19 infection rates. While Idaho has a large ratio of days in vs out of lock-down, the average daily rate increase was nowhere near the maximum value. This is also true for South Carolina's data which shows the smallest value for the ratio but a very average value for daily decrease. This does not mean that stay at home orders are not effective, however. In fact, the data shows quite the opposite. The average infection rate before a state's order was 0.1147 while the average of infection rate data taken after an order went into effect was 0.04426. This is substantial difference and shows that stay at home orders are very useful all over the country.
+
+These weak relationship between time and effectiveness was most likely due to the limited dataset. This dataset had only one measurement for infection rates for each state which does not allow one to get an in-depth view at trends and patterns that might be more obvious in larger sets. Another issue is infection rates and their changes will be different in areas with different population densities which can skew the data in one way or another. Yet another possibility was the fact that the time intervals in this dataset are too small to show any substantial relationships. Nonetheless, we are able to see that stay at home orders are a good way for states to curb the spread of COVID-19 among their citizens.
+
