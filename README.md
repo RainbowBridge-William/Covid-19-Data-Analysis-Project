@@ -1,10 +1,10 @@
 # COVID-19 Data Analysis Project
 
 Group A6
-* Patrick Alexander Abboud
+* William Wang
 * Jeffrey Kaufman
 * Kyler Smith
-* William Wang
+* Patrick Alexander Abboud
 
 ## About the Problem Domain
 
